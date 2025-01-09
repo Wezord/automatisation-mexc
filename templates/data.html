@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau des Stratégies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tableau des Stratégies</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom de la Stratégie</th>
+                <th>Type (Long/Short)</th>
+                <th>StopLoss</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Stratégie Alpha</td>
+                <td>Long</td>
+                <td>5%</td>
+                <td><button class="delete-btn" onclick="deleteRow(this)">Supprimer</button></td>
+            </tr>
+            <tr>
+                <td>Stratégie Beta</td>
+                <td>Short</td>
+                <td>3%</td>
+                <td><button class="delete-btn" onclick="deleteRow(this)">Supprimer</button></td>
+            </tr>
+            <tr>
+                <td>Stratégie Gamma</td>
+                <td>Long</td>
+                <td>2.5%</td>
+                <td><button class="delete-btn" onclick="deleteRow(this)">Supprimer</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        // Fonction pour supprimer une ligne
+        function deleteRow(button) {
+            // Trouve la ligne parente du bouton cliqué
+            const row = button.parentElement.parentElement;
+
+            // Supprime la ligne du tableau
+            row.remove();
+        }
+    </script>
+</body>
+</html>
