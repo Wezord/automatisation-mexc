@@ -1,152 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau des Stratégies</title>
+    <title>Page avec 4 boutons</title>
     <style>
         body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
             font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background-color: #f4f4f9;
         }
-
-        h1 {
-            text-align: center;
-            color: #333;
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 5px 0;
         }
-
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .delete-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 12px;
+        button {
+            padding: 20px 40px;
+            font-size: 18px;
             cursor: pointer;
+            border: none;
             border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
         }
-
-        .delete-btn:hover {
-            background-color: #c0392b;
+        button:hover {
+            background-color: #0056b3;
+        }
+        .button-label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Tableau des Stratégies</h1>
-    <table id="strategiesTable">
-        <thead>
-            <tr>
-                <th>Nom de la Stratégie</th>
-                <th>Actif</th>
-                <th>Alert Message</th>
-                <th>Type (Long/Short)</th>
-                <th>StopLoss</th>
-                <th>Heure</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-            
-            </tr>
-        </tbody>
-    </table>
-
-    <script>
-
-        // Fonction pour supprimer une ligne
-        function deleteRow(button) {
-            // Trouve la ligne parente du bouton cliqué
-            const row = button.parentElement.parentElement;
-
-            // Supprime la ligne du tableau
-            row.remove();
-        }
-
-        // Fonction pour mettre à jour le tableau avec les stratégies
-        document.addEventListener('DOMContentLoaded', function() {
-            // Placez votre code JavaScript ici
-            function updateTable(strategies) {
-                var table = document.getElementById('strategiesTable');
-                var tbody = table ? table.getElementsByTagName('tbody')[0] : null;  // Vérifie si 'table' existe
-                if(!table) console.log("Pas de table");
-                if (!tbody) {
-                    console.error('Erreur : l\'élément tbody n\'a pas été trouvé.');
-                    return;
-                }
-
-                // Vider le tableau existant
-                tbody.innerHTML = '';
-
-                // Ajouter une ligne pour chaque stratégie dans la liste
-                strategies.forEach(function(strategy) {
-                    var row = tbody.insertRow();
-
-                    var cell1 = row.insertCell(0);
-                    var cell2 = row.insertCell(1);
-                    var cell3 = row.insertCell(2);
-                    var cell4 = row.insertCell(3);
-                    var cell5 = row.insertCell(4);
-                    var cell6 = row.insertCell(5);
-                    var cell7 = row.insertCell(6);
-
-                    cell1.textContent = strategy.strategy_order_name;
-                    cell2.textContent = strategy.actif;
-                    cell3.textContent = strategy.alert_message;
-                    cell4.textContent = strategy.type;
-                    cell5.textContent = strategy.stop_loss;
-                    cell6.textContent = strategy.time;
-                    cell7.innerHTML = '<button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>';
-                });
-            }
-        
-
-            // Fonction de polling pour récupérer les stratégies du serveur toutes les 5 secondes
-            function fetchStrategies() {
-                fetch('/alert?json=true')
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        if (data.strategies) {
-                            updateTable(data.strategies);
-                            console.log("Strategie" , data.strategies);
-                        }
-                    })
-                    .catch(error => {
-                console.error("Erreur lors de la récupération des données : ", error);
-            });
-            }
-
-            // Démarrer le polling dès que la page est chargée
-            setInterval(fetchStrategies, 5000); // Toutes les 5 secondes
-        });
-    </script>
+    <div class="button-row">
+        <div class="button-group">
+            <button onclick="window.location.href='x3.html'">X3</button>
+        </div>
+        <div class="button-group">
+            <button onclick="window.location.href='page2.html'">Moving</button>
+        </div>
+    </div>
+    <div class="button-row">
+        <div class="button-group">
+            <button onclick="window.location.href='page3.html'">Bollinger</button>
+        </div>
+        <div class="button-group">
+            <button onclick="window.location.href='larry'">RSI</button>
+        </div>
+    </div>
 </body>
 </html>

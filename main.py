@@ -14,9 +14,14 @@ def home():
     # Sert la page HTML avec le tableau
     return render_template('data.html', strategies = current_alert)
 
-@app.route('/alert')
+@app.route('/larry')
+def larry():
+    return render_template('larry.html', strategies = current_alert)
+
+@app.route('/alert', methods=['GET'])
 def alert():
-    return jsonify({"strategies": current_alert})
+    if request.method == "GET":
+        return jsonify({"strategies": current_alert}), 200
 
 @app.route('/webhook', methods=['POST', 'GET'])
 def webhook():

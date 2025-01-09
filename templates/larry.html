@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau des Stratégies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tableau des Stratégies</h1>
+    <table id="strategiesTable">
+        <thead>
+            <tr>
+                <th>Nom de la Stratégie</th>
+                <th>Actif</th>
+                <th>Alert Message</th>
+                <th>Type (Long/Short)</th>
+                <th>StopLoss</th>
+                <th>Heure</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+
+        // Fonction pour supprimer une ligne
+        function deleteRow(button) {
+            // Trouve la ligne parente du bouton cliqué
+            const row = button.parentElement.parentElement;
+
+            // Supprime la ligne du tableau
+            row.remove();
+        }
+
+        // Fonction pour mettre à jour le tableau avec les stratégies
+        document.addEventListener('DOMContentLoaded', function() {
+            // Placez votre code JavaScript ici
+            function updateTable(strategies) {
+                var table = document.getElementById('strategiesTable');
+                var tbody = table ? table.getElementsByTagName('tbody')[0] : null;  // Vérifie si 'table' existe
+                if(!table) console.log("Pas de table");
+                if (!tbody) {
+                    console.error('Erreur : l\'élément tbody n\'a pas été trouvé.');
+                    return;
+                }
+
+                // Vider le tableau existant
+                tbody.innerHTML = '';
+
+                // Ajouter une ligne pour chaque stratégie dans la liste
+                strategies.forEach(function(strategy) {
+                    if(strategy.strategy_order_name == "Larry Connors RSI 3 Strategy") {
+                        var row = tbody.insertRow();
+
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
+                        var cell4 = row.insertCell(3);
+                        var cell5 = row.insertCell(4);
+                        var cell6 = row.insertCell(5);
+
+                        cell1.textContent = strategy.actif;
+                        cell2.textContent = strategy.alert_message;
+                        cell3.textContent = strategy.type;
+                        cell4.textContent = strategy.stop_loss;
+                        cell5.textContent = strategy.time;
+                        cell6.innerHTML = '<button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>';
+                    }
+                });
+            }
+        
+
+            // Fonction de polling pour récupérer les stratégies du serveur toutes les 5 secondes
+            function fetchStrategies() {
+                fetch('/alert?json=true')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.strategies) {
+                            updateTable(data.strategies);
+                            console.log("Strategie" , data.strategies);
+                        }
+                    })
+                    .catch(error => {
+                console.error("Erreur lors de la récupération des données : ", error);
+            });
+            }
+
+            // Démarrer le polling dès que la page est chargée
+            setInterval(fetchStrategies, 5000); // Toutes les 5 secondes
+        });
+    </script>
+</body>
+</html>
