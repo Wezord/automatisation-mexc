@@ -60,38 +60,27 @@
 </head>
 <body>
     <h1>Tableau des Stratégies</h1>
-    <table>
+    <table id="strategiesTable">
         <thead>
             <tr>
                 <th>Nom de la Stratégie</th>
+                <th>Actif</th>
+                <th>Alert Message</th>
                 <th>Type (Long/Short)</th>
                 <th>StopLoss</th>
+                <th>Heure</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>Stratégie Alpha</td>
-                <td>Long</td>
-                <td>5%</td>
-                <td><button class="delete-btn" onclick="deleteRow(this)">Supprimer</button></td>
-            </tr>
-            <tr>
-                <td>Stratégie Beta</td>
-                <td>Short</td>
-                <td>3%</td>
-                <td><button class="delete-btn" onclick="deleteRow(this)">Supprimer</button></td>
-            </tr>
-            <tr>
-                <td>Stratégie Gamma</td>
-                <td>Long</td>
-                <td>2.5%</td>
-                <td><button class="delete-btn" onclick="deleteRow(this)">Supprimer</button></td>
+            
             </tr>
         </tbody>
     </table>
 
     <script>
+
         // Fonction pour supprimer une ligne
         function deleteRow(button) {
             // Trouve la ligne parente du bouton cliqué
@@ -100,6 +89,64 @@
             // Supprime la ligne du tableau
             row.remove();
         }
+
+        // Fonction pour mettre à jour le tableau avec les stratégies
+        document.addEventListener('DOMContentLoaded', function() {
+            // Placez votre code JavaScript ici
+            function updateTable(strategies) {
+                var table = document.getElementById('strategiesTable');
+                var tbody = table ? table.getElementsByTagName('tbody')[0] : null;  // Vérifie si 'table' existe
+                if(!table) console.log("Pas de table");
+                if (!tbody) {
+                    console.error('Erreur : l\'élément tbody n\'a pas été trouvé.');
+                    return;
+                }
+
+                // Vider le tableau existant
+                tbody.innerHTML = '';
+
+                // Ajouter une ligne pour chaque stratégie dans la liste
+                strategies.forEach(function(strategy) {
+                    var row = tbody.insertRow();
+
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+                    var cell5 = row.insertCell(4);
+                    var cell6 = row.insertCell(5);
+                    var cell7 = row.insertCell(6);
+
+                    cell1.textContent = strategy.strategy_order_name;
+                    cell2.textContent = strategy.actif;
+                    cell3.textContent = strategy.alert_message;
+                    cell4.textContent = strategy.type;
+                    cell5.textContent = strategy.stop_loss;
+                    cell6.textContent = strategy.time;
+                    cell7.innerHTML = '<button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>';
+                });
+            }
+        
+
+            // Fonction de polling pour récupérer les stratégies du serveur toutes les 5 secondes
+            function fetchStrategies() {
+                fetch('/alert?json=true')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.strategies) {
+                            updateTable(data.strategies);
+                            console.log("Strategie" , data.strategies);
+                        }
+                    })
+                    .catch(error => {
+                console.error("Erreur lors de la récupération des données : ", error);
+            });
+            }
+
+            // Démarrer le polling dès que la page est chargée
+            setInterval(fetchStrategies, 5000); // Toutes les 5 secondes
+        });
     </script>
 </body>
 </html>

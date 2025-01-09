@@ -4,13 +4,19 @@ import logging
 
 authorized_ip = ["52.89.214.238", "34.212.75.30", "54.218.53.128", "52.32.178.7"]
 
+current_alert = []
+
 app = Flask(__name__)
 run_with_ngrok(app)  # Active Ngrok pour rendre l'app accessible publiquement
 
 @app.route('/home')
 def home():
     # Sert la page HTML avec le tableau
-    return render_template('data.html')
+    return render_template('data.html', strategies = current_alert)
+
+@app.route('/alert')
+def alert():
+    return jsonify({"strategies": current_alert})
 
 @app.route('/webhook', methods=['POST', 'GET'])
 def webhook():
@@ -21,13 +27,20 @@ def webhook():
     if request.method == 'POST' and request.headers.get('X-Forwarded-For', request.remote_addr) in authorized_ip:
         # Extrait les données envoyées dans la requête POST (ex: {"nom": "Nouvelle stratégie"})
         data = request.json
-        nom = data.get('order_strategy_name')  # Supposons que vous envoyez un champ "nom" dans le JSON
+        nom = data.get('strategy_order_name')  # Supposons que vous envoyez un champ "nom" dans le JSON
+        type = data.get('type')
+        stop_loss = data.get('stop_loss')
+        actif = data.get('actif')
+        time = data.get('time')
+        alert_message = data.get('alert_message')
+        current_alert.append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'stop_loss': stop_loss, 'time':time})
+        print(nom)
+        print(f"Reçu : {data}")  # Afficher les données reçues dans la console
+         # Répondre au service qui a envoyé le webhook
+        return jsonify({"status": "success", "message": "Webhook reçu"}), 200
 
-        return '', 200  # Réponse vide avec statut OK
-    print(f"Reçu : {data}")  # Afficher les données reçues dans la console
-    
-    # Répondre au service qui a envoyé le webhook
-    return jsonify({"status": "success", "message": "Webhook reçu"}), 200
+    else:
+        return jsonify({'status': 'error', 'message': 'Données manquantes'}), 400
 
 if __name__ == '__main__':
     print("Application Flask en cours d'exécution...")
