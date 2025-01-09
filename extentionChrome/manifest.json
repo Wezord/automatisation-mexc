@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Mexc autoclick",
+    "version": "1.0",
+    "description": "Clics automatisés sur Mexc",
+    "permissions": [
+      "storage",
+      "activeTab",
+      "scripting"
+    ],
+    "host_permissions": [
+      "<all_urls>"
+    ],
+    "action": {
+      "default_popup": "popup.html",
+      "default_title": "hello world"
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://*.example.com/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
