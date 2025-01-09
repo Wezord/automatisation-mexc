@@ -67,7 +67,7 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
           "Content-Type": "application/json",
         },
       });
-  
+    console.log("1");
       if (!response.ok) {
         throw new Error(`Erreur HTTP : ${response.status}`);
       }
