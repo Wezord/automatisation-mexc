@@ -18,10 +18,27 @@ def home():
 def larry():
     return render_template('larry.html', strategies = current_alert)
 
+@app.route('/delete_alert', methods=['POST'])
+def delete_alert():
+    global current_alert
+    if request.method == "POST":
+        data = request.get_json()
+        if data is None:
+            return jsonify({"error": "Données manquantes ou mal formatées"}), 400
+        
+        action = data.get("action")
+        value = data.get("alerte")
+
+        if action == "delete":
+            current_alert = [d for d in current_alert if not (d["actif"] == value["actif"] and d["strategy_order_name"] == value["strategy_order_name"] and d["stop_loss"] == value["stop_loss"])]
+
+        return jsonify({"message": "Alerte supprimé"}), 200
+
 @app.route('/alert', methods=['GET'])
 def alert():
     if request.method == "GET":
         return jsonify({"strategies": current_alert}), 200
+
 
 @app.route('/webhook', methods=['POST', 'GET'])
 def webhook():
