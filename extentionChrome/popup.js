@@ -81,6 +81,36 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
   }
 });
 
+document.getElementById("clickButton").addEventListener("click", () => {
+  console.log("hello world");
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length > 0) {
+        const currentTab = tabs[0];
+        const currentUrl = currentTab.url;
+  
+        // Injecter un script pour modifier l'URL de la page
+      chrome.scripting.executeScript({target: { tabId: currentTab.id },func: (url) => {
+          const listElements = document.querySelectorAll(".component_longBtn_BBkFR");
+          element=listElements[0];
+          
+          if (!element){
+              alert("Aucun élément avec la classe 'maClasse' trouvé dans l'élément avec ID 'monId'.");
+          }
+          else{
+              element.click();
+
+              // Optionnel : Simuler un événement 'change' si nécessaire
+              const changeEvent = new Event("change", { bubbles: true });
+              element.dispatchEvent(changeEvent);
+      
+              alert("Button cliqué");
+          }
+      }
+      });
+  }
+  });     
+});
+
 async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
     for (const element of alerte["strategies"]) {
