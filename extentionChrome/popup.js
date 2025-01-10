@@ -8,7 +8,8 @@ document.getElementById("changeUrlButton").addEventListener("click", () => {
         // Injecter un script pour modifier l'URL de la page
         chrome.scripting.executeScript({target: { tabId: currentTab.id },func: (url) => {
             // Redirige la page actuelle vers l'URL modifiée
-            window.location.href = `${url}/docs`;
+            window.location.href = `${url}`;
+            console.log(url)
           },
           args: [currentUrl], // Passe l'URL actuelle comme argument
         });
@@ -71,12 +72,50 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
       if (!response.ok) {
         throw new Error(`Erreur HTTP : ${response.status}`);
       }
-  
       const data = await response.json();
       console.log("Réponse :", data);
-      alert(`Réponse reçue : ${JSON.stringify(data)}`);
+      process_alert(data)
     } catch (error) {
       console.error("Erreur :", error);
       alert("Erreur lors de la requête : " + error.message);
     }
   });
+
+  function process_alert(alerte){
+    if(alerte["strategies"].length > 0){
+      alerte["strategies"].forEach(async element => {
+        nomActif = element["actif"].split(".")[0];
+        console.log(nomActif);
+        change_url(nomActif);
+        await attendre(5000);
+      });
+    }
+  }
+
+  function change_url(actif){
+    // Récupérer l'URL actuelle
+    console.log("test ?");
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length > 0) {
+        const currentTab = tabs[0];
+        const currentUrl = currentTab.url;
+
+        console.log("test");
+  
+        // Injecter un script pour modifier l'URL de la page
+        chrome.scripting.executeScript({target: { tabId: currentTab.id },func: (newActif) => {
+            // Redirige la page actuelle vers l'URL modifiée
+            console.log(newActif);
+            window.location.href = `https://futures.mexc.com/fr-FR/exchange/` + newActif;
+          },
+          args: [actif], // Passe l'URL actuelle comme argument
+        });
+      } else {
+        console.error("Aucun onglet actif trouvé.");
+      }
+    });
+  }
+
+  function attendre(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
