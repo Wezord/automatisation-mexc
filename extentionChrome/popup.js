@@ -90,7 +90,7 @@ document.getElementById("clickButton").addEventListener("click", () => {
   
         // Injecter un script pour modifier l'URL de la page
       chrome.scripting.executeScript({target: { tabId: currentTab.id },func: (url) => {
-          const listElements = document.querySelectorAll(".component_longBtn_BBkFR");
+          const listElements = document.querySelectorAll(".component_longBtn__BBkFR");
           element=listElements[0];
           
           if (!element){
@@ -119,7 +119,8 @@ async function process_alert(alerte){
       await attendre(10000);
       change_url(nomActif);
       await attendre(8000);
-      delete_alert(element)
+      buy_long(0);
+      delete_alert(element);
        // Attente de 5 secondes avant de passer à l'élément suivant
     }
   }
@@ -170,6 +171,88 @@ async function delete_alert(alerte_to_delete){
   } catch (error) {
     console.error("Erreur :", error);
   }
+}
+
+function click_button(class_component, numero_component){
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTab = tabs[0];
+      const currentUrl = currentTab.url;
+
+      // Injecter un script pour modifier l'URL de la page
+    chrome.scripting.executeScript({target: { tabId: currentTab.id },func: (url) => {
+        const listElements = document.querySelectorAll(class_component);
+        element=listElements[numero_component];
+        
+        if (!element){
+            alert("Aucun élément avec la classe 'maClasse' trouvé dans l'élément avec ID 'monId'.");
+        }
+        else{
+            element.click();
+
+            // Optionnel : Simuler un événement 'change' si nécessaire
+            const changeEvent = new Event("change", { bubbles: true });
+            element.dispatchEvent(changeEvent);
+    
+            alert("Button cliqué");
+        }
+      }
+      });
+  }
+  });
+}
+
+function fillButton(class_component, numero_component, value) {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTab = tabs[0];
+      const currentUrl = currentTab.url;
+
+      // Injecter un script pour modifier l'URL de la page
+    chrome.scripting.executeScript({target: { tabId: currentTab.id },func: (url) => {
+        const listElements = document.querySelectorAll(class_component);
+        element=listElements[numero_component];
+        
+        if (!element){
+            alert("Aucun élément avec la classe 'maClasse' trouvé dans l'élément avec ID 'monId'.");
+        }
+        else{
+            element.value=value;
+
+            // Simuler un événement 'input' pour indiquer que la valeur a changé
+            const inputEvent = new Event("input", { bubbles: true });
+            element.dispatchEvent(inputEvent);
+
+            // Optionnel : Simuler un événement 'change' si nécessaire
+            const changeEvent = new Event("change", { bubbles: true });
+            element.dispatchEvent(changeEvent);
+    
+            alert("Texte inséré (enfin normalement)");
+        }
+      }
+      });
+    }
+    });     
+}
+
+async function buy_long(){
+  click_button(".handle_active__EaFtQ", 0);
+  await attendre(2000);
+  if(stopLoss > 0){
+    click_button(".ant-checkbox-input", 2);
+    await attendre(1000);
+    click_button(".InputNumberExtend_wrapper__qxkpD", 2);
+    await attendre(1000);
+    fillButton(".InputNumberExtend_wrapper__qxkpD", 2)
+    await attendre(1000);
+  }
+  click_button(".component_longBtn__BBkFR", 0);
+}
+
+async function buy_short(){
+  click_button(".handle_active__EaFtQ", 0);
+  await attendre(2000);
+  click_button(".component_shortBtn__s8HK4", 0);
 }
 
 function attendre(ms) {
