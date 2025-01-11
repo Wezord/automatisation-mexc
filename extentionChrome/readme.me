@@ -1,0 +1,27 @@
+Actuellement : 
+- "https://98e9-83-202-127-170.ngrok-free.app/delete_alert" pour supprimer les alertes
+- "https://98e9-83-202-127-170.ngrok-free.app/alert" pour récupérer les alertes
+- "https://98e9-83-202-127-170.ngrok-free.app/home" pour choisir les actif
+- Le JSON recu est de la forme ["strategies" : { 
+    {'strategy_order_name': 'Larry Connors RSI 3 Strategy', 'type': 'buy', 'alert_message': 'Buy SL :', 'actif': 'AAVEUSDT.P', 'stop_loss': 'SL', 'time': '2025-01-11T17:54:00Z'},
+    {'strategy_order_name': 'Larry Connors RSI 3 Strategy', 'type': 'buy', 'alert_message': 'Buy SL :', 'actif': 'AAVEUSDT.P', 'stop_loss': 'SL', 'time': '2025-01-11T17:52:00Z'},
+    {'strategy_order_name': 'Larry Connors RSI 3 Strategy', 'type': 'buy', 'alert_message': 'Buy SL :', 'actif': 'AAVEUSDT.P', 'stop_loss': 'SL', 'time': '2025-01-11T17:28:00Z'}
+    }]
+- Dans la partie pour envoyer une requête j'ai ajouté un appel à process_alerte pour traiter le JSON
+- Dans process_alerte il y a plusieurs appel de fonction mais le plus important c'est buy_long faudra vérifier la fonction et la modifier pour tout les autres cas
+
+
+A faire :
+- J'ai fait un premier code pour acheter sans rien faire avec la fonction dans buy long. Mais j'ai l'impression que la fonction querySelector change l'ordre des élèments donc faudra check
+- Tout automatiser et faire en sorte que l'extension envoie une requête uniquement quand toutes les stratégies ont été traités
+- Check que en changeant d'URL ca nous deconnecte pas.
+    - Ca supprime les cookies mais j'ai changé la fonction et ca marchait bien faut juste vérifier sur tout les comptes
+- Faut prévoir comment gérer les multicomptes
+    - Pour les strats groupés ca va faut juste faire en sorte de choisir la stratégie lorsqu'on execute l'extension
+    - Pour les indivs jsp puisque manuellement on doit changer de compte donc soit on automatise le changement de compte soit on arrive à ouvrir une page par compte
+- Les alertes actuels sont mal faite ca donne pas si c'est un short ou long si c'est un buy ou exit et on récupère pas la valeur du Stop_loss
+
+Amélioration : 
+- Ca envoie une requête pour delete une alerte une par une mais pour améliorer on pourrait envoyer une unique requête pour supprimer plusieurs alertes à la fin
+- Changer l'url et reload la page ca met du temps et si le pc rame de plus en rame ca va pas être opti donc trouver comment changer l'actif autrement
+- On doit ajouter les stratégies à la main actuellement donc peut être trouver un moyen de rajouter des stratégies en passant par l'extension

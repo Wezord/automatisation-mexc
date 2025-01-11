@@ -18,6 +18,18 @@ def home():
 def larry():
     return render_template('larry.html', strategies = current_alert)
 
+@app.route('/moving')
+def larry():
+    return render_template('moving.html', strategies = current_alert)
+
+@app.route('/x3')
+def larry():
+    return render_template('x3.html', strategies = current_alert)
+
+@app.route('/bollinger')
+def larry():
+    return render_template('bollinger.html', strategies = current_alert)
+
 @app.route('/delete_alert', methods=['POST'])
 def delete_alert():
     global current_alert
