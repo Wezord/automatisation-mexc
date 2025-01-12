@@ -1,3 +1,9 @@
+const dicStrats = {
+  "X3-test": "69356848",
+  "Bollinge-Test": "69261661"
+};
+var varStratSelect;
+
 document.getElementById("changeUrlButton").addEventListener("click", () => {
   console.log("test ?");
 
@@ -64,7 +70,7 @@ document.getElementById("fillFormButton").addEventListener("click", () => {
   });     
 });
 
-document.getElementById("hoverElement").addEventListener("click", () => {
+/*document.getElementById("hoverElement").addEventListener("click", () => {
   console.log("hello world");
   //let listElements = document.querySelectorAll("#mexc_contract_v_open_position .ant-input");
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -91,7 +97,7 @@ document.getElementById("hoverElement").addEventListener("click", () => {
       });
   }
   });     
-});
+});*/
 
 document.getElementById("sendRequest").addEventListener("click", async () => {
   const url = "https://98e9-83-202-127-170.ngrok-free.app/alert";
@@ -145,6 +151,108 @@ document.getElementById("clickButton").addEventListener("click", () => {
   }
   });     
 });
+
+///////////////////////////////////////////////////
+/////Code pour le changement de compte/////////////
+///////////////////////////////////////////////////
+// Références aux éléments HTML
+const selectElement = document.getElementById("choixStrategies");
+const resultElement = document.getElementById("choixStratResult");
+const formElement = document.getElementById("strategiesForm");
+
+// Remplir la liste déroulante avec les clés du dictionnaire
+function populateSelectOptions() {
+  for (const key in dicStrats) {
+    const option = document.createElement("option");
+    option.value = key; // La valeur de l'option sera la clé
+    option.textContent = key; // Le texte affiché sera la clé
+    selectElement.appendChild(option);
+  }
+}
+
+// Gérer la soumission du formulaire
+formElement.addEventListener("submit", (event) => {
+  event.preventDefault(); // Empêcher le rechargement de la page
+
+  // Récupérer la clé sélectionnée
+  const selectedKey = selectElement.value;
+
+  // Trouver la valeur correspondante dans le dictionnaire
+  const value = dicStrats[selectedKey];
+  varStratSelect=value;
+
+  // Afficher la valeur dans l'élément <p>
+  resultElement.textContent = `Valeur sélectionnée : ${value}`;
+});
+
+// Initialiser la liste déroulante
+populateSelectOptions();
+
+document.getElementById("changeAccount").addEventListener("click", async () => {
+  const url = "https://www.mexc.co/fr-FR/user/switch-account";
+  const stratSelect = varStratSelect; // Assure-toi que cette variable est définie
+
+  console.log("Valeur de stratSelect :", stratSelect);
+
+  // Ouvrir un nouvel onglet
+  chrome.tabs.create({ url: url }, async (tab) => {
+    console.log("Nouvel onglet ouvert :", tab);
+
+    // Attendre 10 secondes pour que la page charge (augmente si nécessaire)
+    await attendre(10000);
+
+    // Injecter le code dans le nouvel onglet
+    chrome.scripting.executeScript(
+      {
+        target: { tabId: tab.id },
+        func: (stratSelect) => {
+          console.log("Script injecté dans le nouvel onglet, stratSelect :", stratSelect);
+
+          alert("Bonjour, script injecté !");
+          const attendreElement = (selector, timeout = 5000) => {
+            return new Promise((resolve, reject) => {
+              const interval = 100; // Vérifie toutes les 100 ms
+              let timeElapsed = 0;
+              const timer = setInterval(() => {
+                const element = document.evaluate(
+                  `//*[contains(text(), '${selector}')]`,
+                  document,
+                  null,
+                  XPathResult.FIRST_ORDERED_NODE_TYPE,
+                  null
+                ).singleNodeValue;
+
+                if (element) {
+                  clearInterval(timer);
+                  resolve(element);
+                } else if ((timeElapsed += interval) >= timeout) {
+                  clearInterval(timer);
+                  reject(new Error("Élément non trouvé"));
+                }
+              }, interval);
+            });
+          };
+
+          attendreElement(stratSelect, 5000)
+            .then((element) => {
+              console.log("Élément trouvé :", element);
+              alert("Élément trouvé !");
+              element.click();
+            })
+            .catch((err) => {
+              console.log(err.message);
+              alert(err.message);
+            });
+        },
+        args: [stratSelect], // Passe stratSelect au nouvel onglet
+      },
+      (results) => {
+        console.log("Code injecté dans le nouvel onglet.", results);
+      }
+    );
+  });
+});
+
 
 // Fonction principale
 async function process_alert(alerte){
