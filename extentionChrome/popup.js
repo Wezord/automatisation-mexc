@@ -169,6 +169,20 @@ function populateSelectOptions() {
     selectElement.appendChild(option);
   }
 }
+function demandeChangementUtilisateur(data) {
+  return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(
+          { action: "changeUser", data }, // Le message à envoyer
+          (response) => {
+              if (chrome.runtime.lastError) {
+                  reject(chrome.runtime.lastError);
+              } else {
+                  resolve(response.result);
+              }
+          }
+      );
+  });
+}
 
 // Gérer la soumission du formulaire
 formElement.addEventListener("submit", (event) => {
@@ -192,9 +206,10 @@ document.getElementById("changeAccount").addEventListener("click", async () => {
   const url = "https://www.mexc.co/fr-FR/user/switch-account";
   const stratSelect = varStratSelect; // Assure-toi que cette variable est définie
 
-  console.log("Valeur de stratSelect :", stratSelect);
-
-  // Ouvrir un nouvel onglet
+  alert("Valeur de stratSelect :", stratSelect);
+  //attendre(2000);
+  demandeChangementUtilisateur(stratSelect);
+  // Ouvrir un nouvel ongletC
   chrome.tabs.create({ url: url }, async (tab) => {
     console.log("Nouvel onglet ouvert :", tab);
 
@@ -202,56 +217,12 @@ document.getElementById("changeAccount").addEventListener("click", async () => {
     await attendre(10000);
 
     // Injecter le code dans le nouvel onglet
-    chrome.scripting.executeScript(
-      {
-        target: { tabId: tab.id },
-        func: (stratSelect) => {
-          console.log("Script injecté dans le nouvel onglet, stratSelect :", stratSelect);
-
-          alert("Bonjour, script injecté !");
-          const attendreElement = (selector, timeout = 5000) => {
-            return new Promise((resolve, reject) => {
-              const interval = 100; // Vérifie toutes les 100 ms
-              let timeElapsed = 0;
-              const timer = setInterval(() => {
-                const element = document.evaluate(
-                  `//*[contains(text(), '${selector}')]`,
-                  document,
-                  null,
-                  XPathResult.FIRST_ORDERED_NODE_TYPE,
-                  null
-                ).singleNodeValue;
-
-                if (element) {
-                  clearInterval(timer);
-                  resolve(element);
-                } else if ((timeElapsed += interval) >= timeout) {
-                  clearInterval(timer);
-                  reject(new Error("Élément non trouvé"));
-                }
-              }, interval);
-            });
-          };
-
-          attendreElement(stratSelect, 5000)
-            .then((element) => {
-              console.log("Élément trouvé :", element);
-              alert("Élément trouvé !");
-              element.click();
-            })
-            .catch((err) => {
-              console.log(err.message);
-              alert(err.message);
-            });
-        },
-        args: [stratSelect], // Passe stratSelect au nouvel onglet
-      },
-      (results) => {
-        console.log("Code injecté dans le nouvel onglet.", results);
-      }
-    );
+    
   });
 });
+
+/////////////////////////////////////////////////////////////////
+//////////////FIN CHANGEMENT COMPTE//////////////////////////////
 
 
 // Fonction principale
@@ -421,7 +392,7 @@ async function buy_short(){
   click_button(".component_shortBtn__s8HK4", 0);
 }
 
-function attendre(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+  function attendre(ms) { 
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
