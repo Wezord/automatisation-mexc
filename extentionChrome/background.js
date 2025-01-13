@@ -33,8 +33,7 @@ function alerteOngletActif(){
                   // Ce code est exécuté dans l'onglet
                   //await attendre(5000);
                   alert("Code exécuté dans l'onglet actif !");
-                  direbonjour();
-                  changeCompte(69356848);
+    
               },
             },
             () => {
@@ -61,7 +60,7 @@ function changeUser(stratSelect){
             func: (stratSelect) => {
               console.log("Script injecté dans le nouvel onglet, stratSelect :", stratSelect);
     
-              alert("Bonjour, script injecté !");
+              //alert("Bonjour, script injecté !");
               const attendreElement = (selector, timeout = 5000) => {
                 return new Promise((resolve, reject) => {
                   const interval = 100; // Vérifie toutes les 100 ms
@@ -89,7 +88,7 @@ function changeUser(stratSelect){
               attendreElement(stratSelect, 5000)
                 .then((element) => {
                   console.log("Élément trouvé :", element);
-                  alert("Élément trouvé !");
+                  console.log("Élément trouvé !");
                   element.click();
                 })
                 .catch((err) => {
@@ -111,7 +110,8 @@ function changeUser(stratSelect){
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "changeUser") {
-    changeUser(69261661);
+    console.log("ojectif: "+message.data);
+    changeUser(message.data);
     // Exemple : traitement d'une donnée
     const processedData = `Données traitées : ${message.data}`;
     
@@ -124,7 +124,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-function changeCompte(stratSelect){
+/*function changeCompte(stratSelect){
   console.log("Script injecté dans le nouvel onglet, stratSelect :", stratSelect);
 
   alert("Bonjour, script injecté !");
@@ -162,7 +162,7 @@ function changeCompte(stratSelect){
       console.log(err.message);
       alert(err.message);
     });
-}
+}*/
 
 
 

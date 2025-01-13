@@ -1,8 +1,8 @@
 const dicStrats = {
-  "X3-test": "69356848",
-  "Bollinge-Test": "69261661"
+  "X3-test": 69356848,
+  "Bollinge-Test": 69261661
 };
-var varStratSelect;
+let varStratSelect;
 
 document.getElementById("changeUrlButton").addEventListener("click", () => {
   console.log("test ?");
@@ -117,7 +117,7 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
     // Envoie le json des stratégies à process 
     process_alert(data)
   } catch (error) {
-    console.error("Erreur :", error);
+    console.error("Erreur :", error); 
     alert("Erreur lors de la requête : " + error.message);
   }
 });
@@ -172,7 +172,7 @@ function populateSelectOptions() {
 function demandeChangementUtilisateur(data) {
   return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage(
-          { action: "changeUser", data }, // Le message à envoyer
+          { action: "changeUser",data: data }, // Le message à envoyer
           (response) => {
               if (chrome.runtime.lastError) {
                   reject(chrome.runtime.lastError);
@@ -205,8 +205,8 @@ populateSelectOptions();
 document.getElementById("changeAccount").addEventListener("click", async () => {
   const url = "https://www.mexc.co/fr-FR/user/switch-account";
   const stratSelect = varStratSelect; // Assure-toi que cette variable est définie
-
-  alert("Valeur de stratSelect :", stratSelect);
+  
+  //alert("Valeur de stratSelect :"+ stratSelect);
   //attendre(2000);
   demandeChangementUtilisateur(stratSelect);
   // Ouvrir un nouvel ongletC
