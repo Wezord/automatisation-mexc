@@ -232,43 +232,23 @@ async function process_alert(alerte){
     for (const element of alerte["strategies"]) {
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
       const nomActif = element["actif"].split("USDT")[0];
+      let typeOrdre = element.type;
+      const stopLoss = element.type;
+      const quantite = 90;
       console.log(nomActif);
-      await attendre(12000);
       // Change l'url
-      change_url(nomActif);
-      await attendre(8000);
+      changementURL2("https://futures.mexc.com/fr-FR/exchange/" + nomActif + "_USDT?type=linear_swap");
+      await attendre(15000);
       // Achete au long
+      if(typeOrdre.toUpperCase() == "SHORT"){
+        buy_short(quantite, stopLoss);
+      }
       buy_long(10);
       // Supprime l'alerte
+      await attendre(15000);
       delete_alert(element);
     }
   }
-}
-
-function change_url(actif){
-  console.log("test ?");
-
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length > 0) {
-      const currentTab = tabs[0];
-      const currentUrl = currentTab.url;
-
-      console.log("test");
-
-      // Construire la nouvelle URL avec la valeur 'actif'
-      const newUrl = `https://futures.mexc.com/fr-FR/exchange/` + actif + "_USDT?type=linear_swap";
-      console.log(newUrl); // Affiche l'URL modifiée
-
-      // Mettre à jour l'URL et forcer un rechargement
-      chrome.tabs.update(currentTab.id, { url: newUrl }, () => {
-        // Après la mise à jour de l'URL, forcer un rechargement de la page
-        //chrome.tabs.reload(currentTab.id);
-        console.log(newUrl)
-      });
-    } else {
-      console.error("Aucun onglet actif trouvé.");
-    }
-  });
 }
 
 async function delete_alert(alerte_to_delete){
@@ -345,6 +325,21 @@ function click_button(class_component, numero_component){
   });
 }
 
+function changementURL2(data){
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      { action: "changeURL", data }, // Le message à envoyer
+      (response) => {
+          if (chrome.runtime.lastError) {
+              reject(chrome.runtime.lastError);
+          } else {
+              resolve(response.result);
+          }
+      }
+    );
+  });
+}
+
 function fillButton(class_component, numero_component, value) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
@@ -385,24 +380,25 @@ async function buy_long(stopLoss){
   //Clique sur ouvrir
   click_button(".handle_active__EaFtQ", 0);
   await attendre(2000);
-  click_button("#mexc_contract_v_open_position .ant-input", 1);
-  await attendre(1000);
-  fillButton("#mexc_contract_v_open_position .ant-input", 1, 10);
+  click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 0);
+  await attendre(2000);
+  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, 10);
   if(stopLoss > 0){
     console.log("stoploss")
     // Coche la case long Sl
-    click_button(".ant-checkbox-input", 1);
-    await attendre(1000);
+    click_button(".ant-checkbox-input", 2);
+    await attendre(2000);
     // Clique sur la case du stoploss
-    click_button(".InputNumberExtend_wrapper__qxkpD", 4);
-    await attendre(1000);
+    click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
+    await attendre(2000);
     // Remplie la case
-    fillButton(".InputNumberExtend_wrapper__qxkpD", 4, "0.00004");
-    await attendre(1000);
+    fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, 1);
+    await attendre(2000);
     console.log("achat");
   }
   // Appuie sur open long
   click_button(".component_longBtn__BBkFR", 0);
+  await attendre(2000);
   console.log("ordre réalisé");
 }
 async function buy_short(){

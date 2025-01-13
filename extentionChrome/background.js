@@ -122,7 +122,42 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log("Message reçu depuis content.js :", message.text);
     sendResponse({ response: "Bonjour depuis background.js !" });
   }
+  else if(message.action === "changeURL"){
+    console.log("Changement url", message)
+    changementURL(message.data);
+    // Exemple : traitement d'une donnée
+    const processedData = `Données traitées : ${message.data}`;
+    
+    // Réponse envoyée au script d'appel
+    sendResponse({ result: "Url change" });
+  }
 });
+
+function changementURL(data){
+  console.log("test ?");
+
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTab = tabs[0];
+      const currentUrl = currentTab.url;
+
+      console.log("test");
+
+      // Construire la nouvelle URL avec la valeur 'actif'
+      const newUrl = data;
+      console.log(newUrl); // Affiche l'URL modifiée
+
+      // Mettre à jour l'URL et forcer un rechargement
+      chrome.tabs.update(currentTab.id, { url: newUrl }, () => {
+        // Après la mise à jour de l'URL, forcer un rechargement de la page
+        //chrome.tabs.reload(currentTab.id);
+        console.log(newUrl)
+      });
+    } else {
+      console.error("Aucun onglet actif trouvé.");
+    }
+  });
+}
 
 /*function changeCompte(stratSelect){
   console.log("Script injecté dans le nouvel onglet, stratSelect :", stratSelect);
