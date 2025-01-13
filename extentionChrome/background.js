@@ -20,7 +20,7 @@ function attendre(ms) {
 function direbonjour(){
   alert("bonjour");
 }
-async function changeUser(){
+function changeUser(){
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
         const activeTabId = tabs[0].id;
@@ -29,9 +29,9 @@ async function changeUser(){
         chrome.scripting.executeScript(
             {
                 target: { tabId: activeTabId },
-                func: () => {
+                func: async () => {
                     // Ce code est exécuté dans l'onglet
-                    //await attendre(5000);
+                    await attendre(5000);
                     alert("Code exécuté dans l'onglet actif !");
                     changeCompte(69356848);
                 },
@@ -51,7 +51,7 @@ async function changeUser(){
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "changeUser") {
-    async () => {changeUser();}
+    changeUser();
     // Exemple : traitement d'une donnée
     const processedData = `Données traitées : ${message.data}`;
     

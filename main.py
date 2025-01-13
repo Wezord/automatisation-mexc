@@ -19,15 +19,15 @@ def larry():
     return render_template('larry.html', strategies = current_alert)
 
 @app.route('/moving')
-def larry():
+def moving():
     return render_template('moving.html', strategies = current_alert)
 
 @app.route('/x3')
-def larry():
+def x3():
     return render_template('x3.html', strategies = current_alert)
 
 @app.route('/bollinger')
-def larry():
+def bollinger():
     return render_template('bollinger.html', strategies = current_alert)
 
 @app.route('/delete_alert', methods=['POST'])
