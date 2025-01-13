@@ -63,11 +63,12 @@ def webhook():
         data = request.json
         nom = data.get('strategy_order_name')  # Supposons que vous envoyez un champ "nom" dans le JSON
         type = data.get('type')
+        position = data.get('position')
         stop_loss = data.get('stop_loss')
         actif = data.get('actif')
         time = data.get('time')
         alert_message = data.get('alert_message')
-        current_alert.append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'stop_loss': stop_loss, 'time':time})
+        current_alert.append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
         print(nom)
         print(f"Reçu : {data}")  # Afficher les données reçues dans la console
          # Répondre au service qui a envoyé le webhook

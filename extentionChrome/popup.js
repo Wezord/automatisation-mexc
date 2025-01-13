@@ -2,7 +2,8 @@ const dicStrats = {
   "X3-test": 69356848,
   "Bollinge-Test": 69261661
 };
-let varStratSelect;
+const ngrokURL = "https://704e-83-202-127-170.ngrok-free.app"
+var varStratSelect;
 
 document.getElementById("changeUrlButton").addEventListener("click", () => {
   console.log("test ?");
@@ -99,27 +100,43 @@ document.getElementById("fillFormButton").addEventListener("click", () => {
   });     
 });*/
 
-document.getElementById("sendRequest").addEventListener("click", async () => {
-  const url = "https://98e9-83-202-127-170.ngrok-free.app/alert";
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  console.log("1");
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP : ${response.status}`);
-    }
-    const data = await response.json();
-    console.log("Réponse :", data);
-    // Envoie le json des stratégies à process 
-    process_alert(data)
-  } catch (error) {
-    console.error("Erreur :", error); 
-    alert("Erreur lors de la requête : " + error.message);
+async function infiniteTrade(){
+  const url = ngrokURL + "/alert";
+  console.log(strategies);
+  if(Object.keys(strategies).length > 0){
+    console.log("process data");
+    await process_alert(strategies);
+    strategies = [];
   }
+  else {
+    console.log("get new data");
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Réponse :", data);
+      // Envoie le json des stratégies à process 
+      strategies = data;
+    } 
+    catch (error) {
+      console.error("Erreur :", error);
+      alert("Erreur lors de la requête : " + error.message);
+    }
+  }
+  await attendre(1000);
+  infiniteTrade();
+}
+
+let strategies = [];
+document.getElementById("sendRequest").addEventListener("click", async () => {
+  infiniteTrade();
 });
 
 document.getElementById("clickButton").addEventListener("click", () => {
@@ -232,27 +249,41 @@ async function process_alert(alerte){
     for (const element of alerte["strategies"]) {
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
       const nomActif = element["actif"].split("USDT")[0];
-      let typeOrdre = element.type;
-      const stopLoss = element.type;
+      const position = element.position;
+      const type = element.type;
+      const stopLoss = element.stopLoss;
       const quantite = 90;
-      console.log(nomActif);
+      console.log(nomActif + " " + position + " " + type);
       // Change l'url
+      delete_alert(element);
+      await attendre(2000);
       changementURL2("https://futures.mexc.com/fr-FR/exchange/" + nomActif + "_USDT?type=linear_swap");
       await attendre(15000);
       // Achete au long
-      if(typeOrdre.toUpperCase() == "SHORT"){
-        buy_short(quantite, stopLoss);
+      if(position == "short" && type == "buy"){
+        buy_short(10);
       }
-      buy_long(10);
+      else if (position == "long" && type == "buy"){
+        buy_long(10);
+      }
+      else if (position == "short" && type == "sell"){
+        close_short();
+      }
+      else if (position == "long" && type == "sell"){
+        close_long();
+      }
+      else { 
+        console.log("wut?")
+      }
       // Supprime l'alerte
-      await attendre(15000);
-      delete_alert(element);
+      await attendre(25000);
     }
   }
+  return alerte;
 }
 
 async function delete_alert(alerte_to_delete){
-  const url = "https://98e9-83-202-127-170.ngrok-free.app/delete_alert";
+  const url = ngrokURL + "/delete_alert";
   const data = {
     action : "delete",
     alerte : alerte_to_delete
@@ -273,23 +304,38 @@ async function delete_alert(alerte_to_delete){
   }
 }
 
-function clickCheckboxByLabelText(targetText) {
-  // Récupère tous les éléments span qui peuvent contenir le texte cible
-  const spans = document.querySelectorAll('span');
+function click_button(class_component, numero_component, isHandler=false){
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTab = tabs[0];
+      const currentUrl = currentTab.url;
 
-  spans.forEach(span => {
-    console.log('span trouvé');
-      // Vérifie si le texte correspond à "Long TP/SL"
-      if (span.textContent.trim() === targetText) {
-          // Remonte au parent le plus proche (le wrapper) et trouve l'input associé
-          const parentLabel = span.closest('label'); // Trouve l'élément <label>
-          if (parentLabel) {
-              const checkbox = parentLabel.querySelector('input[type="checkbox"]');
-              if (checkbox) {
-                  checkbox.click(); // Simule le clic sur la checkbox
-              }
-          }
-      }
+      // Injecter un script pour modifier l'URL de la page
+    chrome.scripting.executeScript({
+      target: { tabId: currentTab.id },
+      func: (class_component, numero_component, isHandler) => {
+        const listElements = document.querySelectorAll(class_component);
+        element=listElements[numero_component];
+        if(isHandler){
+          element=element.children[1];
+        }
+        
+        if (!element){
+            alert("Aucun élément avec la classe 'maClasse' trouvé dans l'élément avec ID 'monId'.");
+        }
+        else{
+            element.click();
+
+            // Optionnel : Simuler un événement 'change' si nécessaire
+            const changeEvent = new Event("change", { bubbles: true });
+            element.dispatchEvent(changeEvent);
+    
+            console.log("Button cliqué");
+        }
+      },
+      args: [class_component, numero_component, isHandler]  // Passer les arguments ici
+      });
+  }
   });
 }
 
@@ -354,7 +400,7 @@ function fillButton(class_component, numero_component, value) {
         element=listElements[numero_component];
         
         if (!element){
-            alert("Aucun élément avec la classe 'maClasse' trouvé dans l'élément avec ID 'monId'.");
+            console.log("Aucun élément avec la classe 'maClasse' trouvé dans l'élément avec ID 'monId'." + class_component + " " + numero_component);
         }
         else{
             element.value=value;
@@ -383,6 +429,7 @@ async function buy_long(stopLoss){
   click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 0);
   await attendre(2000);
   fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, 10);
+  await attendre(2000);
   if(stopLoss > 0){
     console.log("stoploss")
     // Coche la case long Sl
@@ -392,7 +439,7 @@ async function buy_long(stopLoss){
     click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
     await attendre(2000);
     // Remplie la case
-    fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, 1);
+    fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, 0.1);
     await attendre(2000);
     console.log("achat");
   }
@@ -401,10 +448,56 @@ async function buy_long(stopLoss){
   await attendre(2000);
   console.log("ordre réalisé");
 }
-async function buy_short(){
+
+async function buy_short(stopLoss){
+  //Clique sur ouvrir
   click_button(".handle_active__EaFtQ", 0);
   await attendre(2000);
+  click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 0);
+  await attendre(2000);
+  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, 10);
+  await attendre(2000);
+  if(stopLoss > 0){
+    console.log("stoploss")
+    // Coche la case long Sl
+    click_button(".ant-checkbox-input", 3);
+    await attendre(2000);
+    // Clique sur la case du stoploss
+    click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
+    await attendre(2000);
+    // Remplie la case
+    fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, 400);
+    await attendre(2000);
+    console.log("achat");
+  }
+  // Appuie sur open long
   click_button(".component_shortBtn__s8HK4", 0);
+  await attendre(2000);
+  console.log("ordre réalisé");
+}
+
+async function close_short(){
+  click_button(".handle_vInner__IXFRx",0,true);
+  await attendre(2000);
+  click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 1);
+  await attendre(2000);
+  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 1, 100000000);
+  await attendre(2000);
+  click_button(".component_longBtn__BBkFR", 1);
+  await attendre(2000);
+  console.log("ordre réalisé");
+}
+
+async function close_long(){
+  click_button(".handle_vInner__IXFRx",0,true);
+  await attendre(2000);
+  click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 1);
+  await attendre(2000);
+  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 1, 100000000);
+  await attendre(2000);
+  click_button(".component_shortBtn__s8HK4", 1);
+  await attendre(2000);
+  console.log("ordre réalisé");
 }
 
 async function buy(valeur,stopLoss=0,takeProfit=0,long=true){
