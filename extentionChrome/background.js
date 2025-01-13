@@ -20,7 +20,7 @@ function attendre(ms) {
 function direbonjour(){
   alert("bonjour");
 }
-function changeUser(){
+function alerteOngletActif(){
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
         const activeTabId = tabs[0].id;
@@ -28,13 +28,14 @@ function changeUser(){
         // Injecte et exécute le script
         chrome.scripting.executeScript(
             {
-                target: { tabId: activeTabId },
-                func: async () => {
-                    // Ce code est exécuté dans l'onglet
-                    await attendre(5000);
-                    alert("Code exécuté dans l'onglet actif !");
-                    changeCompte(69356848);
-                },
+              target: { tabId: activeTabId },
+              func: async () => {
+                  // Ce code est exécuté dans l'onglet
+                  //await attendre(5000);
+                  alert("Code exécuté dans l'onglet actif !");
+                  direbonjour();
+                  changeCompte(69356848);
+              },
             },
             () => {
                 if (chrome.runtime.lastError) {
@@ -46,12 +47,71 @@ function changeUser(){
         );  
     }
 });
-
 }
+
+function changeUser(stratSelect){
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+        const activeTabId = tabs[0].id;
+
+        // Injecte et exécute le script
+        chrome.scripting.executeScript(
+          {
+            target: { tabId: activeTabId },
+            func: (stratSelect) => {
+              console.log("Script injecté dans le nouvel onglet, stratSelect :", stratSelect);
+    
+              alert("Bonjour, script injecté !");
+              const attendreElement = (selector, timeout = 5000) => {
+                return new Promise((resolve, reject) => {
+                  const interval = 100; // Vérifie toutes les 100 ms
+                  let timeElapsed = 0;
+                  const timer = setInterval(() => {
+                    const element = document.evaluate(
+                      `//*[contains(text(), '${selector}')]`,
+                      document,
+                      null,
+                      XPathResult.FIRST_ORDERED_NODE_TYPE,
+                      null
+                    ).singleNodeValue;
+    
+                    if (element) {
+                      clearInterval(timer);
+                      resolve(element);
+                    } else if ((timeElapsed += interval) >= timeout) {
+                      clearInterval(timer);
+                      reject(new Error("Élément non trouvé"));
+                    }
+                  }, interval);
+                });
+              };
+    
+              attendreElement(stratSelect, 5000)
+                .then((element) => {
+                  console.log("Élément trouvé :", element);
+                  alert("Élément trouvé !");
+                  element.click();
+                })
+                .catch((err) => {
+                  console.log(err.message);
+                  alert(err.message);
+                });
+            },
+            args: [stratSelect], // Passe stratSelect au nouvel onglet
+          },
+          (results) => {
+            console.log("Code injecté dans le nouvel onglet.", results);
+          }
+        );
+    }
+});
+}
+
+
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "changeUser") {
-    changeUser();
+    changeUser(69261661);
     // Exemple : traitement d'une donnée
     const processedData = `Données traitées : ${message.data}`;
     
