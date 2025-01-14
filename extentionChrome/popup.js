@@ -251,7 +251,8 @@ async function process_alert(alerte){
       const nomActif = element["actif"].split("USDT")[0];
       const position = element.position;
       const type = element.type;
-      const stopLoss = element.stopLoss;
+      const stopLoss = parseInt(element.stopLoss, 10);
+      const valueStopLoss = parseFloat(element.alert_message, 10);;
       const quantite = 90;
       console.log(nomActif + " " + position + " " + type);
       // Change l'url
@@ -261,10 +262,10 @@ async function process_alert(alerte){
       await attendre(15000);
       // Achete au long
       if(position == "short" && type == "buy"){
-        buy_short(10);
+        buy_short(stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
-        buy_long(10);
+        buy_long(stopLoss, valueStopLoss);
       }
       else if (position == "short" && type == "sell"){
         close_short();
@@ -422,13 +423,13 @@ function fillButton(class_component, numero_component, value) {
     });     
 }
 
-async function buy_long(stopLoss){
+async function buy_long(stopLoss,  value_stopLoss = 0.1, value_buy=10){
   //Clique sur ouvrir
   click_button(".handle_active__EaFtQ", 0);
   await attendre(2000);
   click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 0);
   await attendre(2000);
-  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, 10);
+  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, value_buy);
   await attendre(2000);
   if(stopLoss > 0){
     console.log("stoploss")
@@ -439,7 +440,7 @@ async function buy_long(stopLoss){
     click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
     await attendre(2000);
     // Remplie la case
-    fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, 0.1);
+    fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, value_stopLoss);
     await attendre(2000);
     console.log("achat");
   }
@@ -449,7 +450,7 @@ async function buy_long(stopLoss){
   console.log("ordre réalisé");
 }
 
-async function buy_short(stopLoss){
+async function buy_short(stopLoss, value_stopLoss = 400, value_buy =10){
   //Clique sur ouvrir
   click_button(".handle_active__EaFtQ", 0);
   await attendre(2000);
