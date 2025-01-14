@@ -8,6 +8,7 @@ const dicStrats = {
 };
 const ngrokURL = "https://704e-83-202-127-170.ngrok-free.app"
 var varStratSelect;
+var selectStrat;
 
 document.getElementById("changeUrlButton").addEventListener("click", () => {
   console.log("test ?");
@@ -141,7 +142,7 @@ async function infiniteTrade(strat){
 
 let strategies = [];
 document.getElementById("sendRequest").addEventListener("click", async () => {
-  infiniteTrade(varStratSelect);
+  infiniteTrade(selectStrat);
 });
 
 document.getElementById("clickButton").addEventListener("click", () => {
@@ -212,6 +213,7 @@ formElement.addEventListener("submit", (event) => {
 
   // Récupérer la clé sélectionnée
   const selectedKey = selectElement.value;
+  selectStrat = selectedKey;
 
   // Trouver la valeur correspondante dans le dictionnaire
   const value = dicStrats[selectedKey];
@@ -259,7 +261,7 @@ async function process_alert(alerte){
       const stopLoss = parseInt(element.stopLoss, 10);
       const valueStopLoss = parseFloat(element.alert_message, 10);;
       const quantite = 90;
-      console.log(nomActif + " " + position + " " + type);
+      console.log(nomActif + " " + position + " " + type + " " + element.strategy_order_name);
       // Change l'url
       delete_alert(element);
       await attendre(2000);
@@ -277,6 +279,10 @@ async function process_alert(alerte){
       }
       else if (position == "long" && type == "sell"){
         close_long();
+      }
+      else if(position =="flat"){
+        await close_long();
+        close_short();
       }
       else { 
         console.log("wut?")

@@ -59,14 +59,13 @@
     </style>
 </head>
 <body>
-    <h1>Tableau des Stratégies</h1>
+    <h1>Alerte Bollinger</h1>
     <table id="strategiesTable">
         <thead>
             <tr>
-                <th>Nom de la Stratégie</th>
                 <th>Actif</th>
-                <th>Alert Message</th>
                 <th>Type (Long/Short)</th>
+                <th>Entry/Exit</th>
                 <th>StopLoss</th>
                 <th>Heure</th>
                 <th>Actions</th>
@@ -118,9 +117,9 @@
                         var cell6 = row.insertCell(5);
 
                         cell1.textContent = strategy.actif;
-                        cell2.textContent = strategy.alert_message;
+                        cell2.textContent = strategy.position;
                         cell3.textContent = strategy.type;
-                        cell4.textContent = strategy.stop_loss;
+                        cell4.textContent = strategy.alert_message;
                         cell5.textContent = strategy.time;
                         cell6.innerHTML = '<button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>';
                     }
