@@ -1,4 +1,8 @@
 const dicStrats = {
+  "x3" : 1,
+  "rsi": 2,
+  "bollinger" : 3,
+  "moving" : 4,
   "X3-test": 69356848,
   "Bollinge-Test": 69261661
 };
@@ -100,8 +104,8 @@ document.getElementById("fillFormButton").addEventListener("click", () => {
   });     
 });*/
 
-async function infiniteTrade(){
-  const url = ngrokURL + "/alert";
+async function infiniteTrade(strat){
+  const url = ngrokURL + "/" + strat;
   console.log(strategies);
   if(Object.keys(strategies).length > 0){
     console.log("process data");
@@ -115,6 +119,7 @@ async function infiniteTrade(){
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "X-Custom-Message": "get_alert"
         },
       });
       if (!response.ok) {
@@ -131,12 +136,12 @@ async function infiniteTrade(){
     }
   }
   await attendre(1000);
-  infiniteTrade();
+  infiniteTrade(strat);
 }
 
 let strategies = [];
 document.getElementById("sendRequest").addEventListener("click", async () => {
-  infiniteTrade();
+  infiniteTrade(varStratSelect);
 });
 
 document.getElementById("clickButton").addEventListener("click", () => {

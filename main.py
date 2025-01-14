@@ -4,6 +4,7 @@ import logging
 
 authorized_ip = ["52.89.214.238", "34.212.75.30", "54.218.53.128", "52.32.178.7"]
 
+global current_alert
 current_alert = []
 
 app = Flask(__name__)
@@ -14,25 +15,36 @@ def home():
     # Sert la page HTML avec le tableau
     return render_template('data.html', strategies = current_alert)
 
-@app.route('/larry')
+@app.route('/rsi')
 def larry():
-    return render_template('larry.html', strategies = current_alert)
+    if request.method == "GET" and request.headers.get("X-Custom-Message") == "get_alert":
+        strategies_to_send = [d for d in current_alert if d["strategy_order_name"] == "rsi"]
+        return jsonify({"strategies": strategies_to_send}), 200
+    return render_template('rsi.html', strategies = current_alert)
 
 @app.route('/moving')
 def moving():
+    if request.method == "GET" and request.headers.get("X-Custom-Message") == "get_alert":
+        strategies_to_send = [d for d in current_alert if d["strategy_order_name"] == "moving"]
+        return jsonify({"strategies": strategies_to_send}), 200
     return render_template('moving.html', strategies = current_alert)
 
 @app.route('/x3')
 def x3():
+    if request.method == "GET" and request.headers.get("X-Custom-Message") == "get_alert":
+        strategies_to_send = [d for d in current_alert if d["strategy_order_name"] == "x3"]
+        return jsonify({"strategies": strategies_to_send}), 200
     return render_template('x3.html', strategies = current_alert)
 
 @app.route('/bollinger')
 def bollinger():
+    if request.method == "GET" and request.headers.get("X-Custom-Message") == "get_alert":
+        strategies_to_send = [d for d in current_alert if d["strategy_order_name"] == "bollinger"]
+        return jsonify({"strategies": strategies_to_send}), 200
     return render_template('bollinger.html', strategies = current_alert)
 
 @app.route('/delete_alert', methods=['POST'])
 def delete_alert():
-    global current_alert
     if request.method == "POST":
         data = request.get_json()
         if data is None:
