@@ -4,8 +4,8 @@ import logging
 
 authorized_ip = ["52.89.214.238", "34.212.75.30", "54.218.53.128", "52.32.178.7"]
 
-global current_alert
-current_alert = []
+current_alert = [{'strategy_order_name': 'moving', 'type': 'buy', 'position': 'long', 'alert_message': 'Entry long', 'actif': 'UNIUSDT.P', 'stop_loss': '0', 'time': '2025-01-14T15:20:00Z'},
+                 {'strategy_order_name': 'moving', 'type': 'buy', 'position': 'long', 'alert_message': 'Entry long', 'actif': 'CELRUSDT.P', 'stop_loss': '0', 'time': '2025-01-14T15:20:00Z'}]
 
 app = Flask(__name__)
 run_with_ngrok(app)  # Active Ngrok pour rendre l'app accessible publiquement
@@ -38,6 +38,7 @@ def x3():
 
 @app.route('/bollinger')
 def bollinger():
+    global current_alert
     if request.method == "GET" and request.headers.get("X-Custom-Message") == "get_alert":
         strategies_to_send = [d for d in current_alert if d["strategy_order_name"] == "bollinger"]
         return jsonify({"strategies": strategies_to_send}), 200
@@ -45,6 +46,7 @@ def bollinger():
 
 @app.route('/delete_alert', methods=['POST'])
 def delete_alert():
+    global current_alert
     if request.method == "POST":
         data = request.get_json()
         if data is None:
