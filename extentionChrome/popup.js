@@ -105,7 +105,8 @@ document.getElementById("fillFormButton").addEventListener("click", () => {
   });     
 });*/
 
-async function infiniteTrade(strat){
+async function infiniteTrade(strat_to_use = "alert"){
+  const strat = strat_to_use;
   const url = ngrokURL + "/" + strat;
   console.log(strategies);
   if(Object.keys(strategies).length > 0){
@@ -255,40 +256,42 @@ async function process_alert(alerte){
     // Parcours les alertes
     for (const element of alerte["strategies"]) {
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
-      const nomActif = element["actif"].split("USDT")[0];
+      //const nomActif = element["actif"].split("USDT")[0];
+      const nomActif = element["actif"].split(".")[0];
       const position = element.position;
       const type = element.type;
       const stopLoss = parseInt(element.stopLoss, 10);
       const valueStopLoss = parseFloat(element.alert_message, 10);;
       const quantite = 90;
-      console.log(nomActif + " " + position + " " + type + " " + element.strategy_order_name);
+      console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name);
       // Change l'url
       delete_alert(element);
       await attendre(2000);
-      changementURL2("https://futures.mexc.com/fr-FR/exchange/" + nomActif + "_USDT?type=linear_swap");
-      await attendre(15000);
+      await searchCrypto(nomActif);
+      //changementURL2("https://futures.mexc.com/fr-FR/exchange/" + nomActif + "_USDT?type=linear_swap");
+      await attendre(3000);
       // Achete au long
       if(position == "short" && type == "buy"){
-        buy_short(stopLoss, valueStopLoss);
+        await buy_short(stopLoss, valueStopLoss, 90);
       }
       else if (position == "long" && type == "buy"){
-        buy_long(stopLoss, valueStopLoss);
+        await buy_long(stopLoss, valueStopLoss, 90);
       }
       else if (position == "short" && type == "sell"){
-        close_short();
+        await close_short();
       }
       else if (position == "long" && type == "sell"){
-        close_long();
-      }
-      else if(position =="flat"){
         await close_long();
-        close_short();
+      }
+      else if(position == "flat"){
+        await close_long();
+        await close_short();
       }
       else { 
         console.log("wut?")
       }
       // Supprime l'alerte
-      await attendre(25000);
+      await attendre(1000);
     }
   }
   return alerte;
@@ -333,7 +336,7 @@ function click_button(class_component, numero_component, isHandler=false){
         }
         
         if (!element){
-            alert("Aucun élément avec la classe 'maClasse' trouvé dans l'élément avec ID 'monId'.");
+          console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché'.");
         }
         else{
             element.click();
@@ -346,38 +349,6 @@ function click_button(class_component, numero_component, isHandler=false){
         }
       },
       args: [class_component, numero_component, isHandler]  // Passer les arguments ici
-      });
-  }
-  });
-}
-
-function click_button(class_component, numero_component){
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length > 0) {
-      const currentTab = tabs[0];
-      const currentUrl = currentTab.url;
-
-      // Injecter un script pour modifier l'URL de la page
-    chrome.scripting.executeScript({
-      target: { tabId: currentTab.id },
-      func: (class_component, numero_component) => {
-        const listElements = document.querySelectorAll(class_component);
-        element=listElements[numero_component];
-        
-        if (!element){
-            alert("Aucun élément avec la classe voulue trouvé dans l'élément recherché'.");
-        }
-        else{
-            element.click();
-
-            // Optionnel : Simuler un événement 'change' si nécessaire
-            const changeEvent = new Event("change", { bubbles: true });
-            element.dispatchEvent(changeEvent);
-    
-            console.log("Button cliqué");
-        }
-      },
-      args: [class_component, numero_component]  // Passer les arguments ici
       });
   }
   });
@@ -397,66 +368,6 @@ function changementURL2(data){
     );
   });
 }
-
-function closeTrade(crypto,long){//crypto: les deux ou trois lettre majuscules qui définissent une crypto ex: BTC, ETH etc
-  //Long c'est simplement un bouléen qui va nous indiquer quel type de position doit être fermé
-  crypto=crypto+"USDT";
-  console.log(crypto);
-  class_component=".ant-table-row-level-0";
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length > 0) {
-      const currentTab = tabs[0];
-      const currentUrl = currentTab.url;
-      
-
-      // Injecter un script pour modifier l'URL de la page
-      chrome.scripting.executeScript({
-        target: { tabId: currentTab.id },
-        func: (crypto,class_component,long) => {
-          const listElements = document.querySelectorAll(class_component);
-          //console.log("liste elements :",listElements);
-          /*element=listElements[numero_component];*/
-          
-          if (listElements.length==0){
-              alert("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
-              console.log("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
-          }
-          else{
-            const matchingElements = Array.from(listElements).filter((element) =>
-              element.textContent.trim().toLowerCase().includes(crypto.toLowerCase()));
-            const nbMatchingElements=matchingElements.length;
-            if (nbMatchingElements==1){
-              const bouton=(matchingElements[0].querySelectorAll(`.FastClose_closeBtn__ze4z7`))[0];
-              bouton.click();
-            }
-            else if(nbMatchingElements>1){
-              console.log(nbMatchingElements," éléments correponsdants ont été détectés");
-              const matchingElements2=Array.from(matchingElements).filter((element) =>
-                element.textContent.trim().toLowerCase().includes(long ? "long" : "short"));
-              console.log("Nombre de nouveaux éléments correspndants: ",matchingElements2.length);
-
-              if(matchingElements2.length==1){                
-                const bouton=(matchingElements2[0].querySelectorAll(`.FastClose_closeBtn__ze4z7`))[0];
-                bouton.click()
-              }
-              else{
-                console.log("Trop d'éléments correspondants. Abandon");
-              }
-            } 
-          }
-        },
-        args: [crypto,class_component,long]  // Passer les arguments ici
-      });
-    }
-  });
-}
-/*element.click();
-
-// Optionnel : Simuler un événement 'change' si nécessaire
-const changeEvent = new Event("change", { bubbles: true });
-element.dispatchEvent(changeEvent);
-
-console.log("Button cliqué");*/
 
 function fillButton(class_component, numero_component, value) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -527,7 +438,7 @@ async function buy_short(stopLoss, value_stopLoss = 400, value_buy =10){
   await attendre(2000);
   click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 0);
   await attendre(2000);
-  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, 10);
+  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, value_buy);
   await attendre(2000);
   if(stopLoss > 0){
     console.log("stoploss")
@@ -609,8 +520,21 @@ async function buy(valeur,stopLoss=0,takeProfit=0,long=true){
   console.log("ordre réalisé");
 }
 
-  function attendre(ms) { 
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+async function searchCrypto(actif){
+  click_button(".contractDetail_contractNameBox__IcVlT", 0);
+  await attendre(1000);
+  click_button(".ant-input", 2);
+  await attendre(1000);
+  fillButton(".ant-input", 2, actif);
+  await attendre(1000);
+  click_button(".Pairs_row__XKonK", 1);
+  await attendre(2000);
+  //click_button(".contractDetail_contractNameBox__IcVlT", 0);
+  await attendre(1000);
+}
+
+function attendre(ms) { 
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
   
