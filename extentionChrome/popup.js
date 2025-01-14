@@ -392,6 +392,52 @@ function changementURL2(data){
   });
 }
 
+function closeTrade(crypto){
+  crypto=crypto+"USDT";
+  console.log(crypto);
+  class_component=".ant-table-row-level-0";
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTab = tabs[0];
+      const currentUrl = currentTab.url;
+      
+
+      // Injecter un script pour modifier l'URL de la page
+      chrome.scripting.executeScript({
+        target: { tabId: currentTab.id },
+        func: (crypto,class_component) => {
+          const listElements = document.querySelectorAll(class_component);
+          //console.log("liste elements :",listElements);
+          /*element=listElements[numero_component];*/
+          
+          if (listElements.length==0){
+              alert("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
+              console.log("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
+          }
+          else{
+            const index = Array.from(listElements).findIndex((element) =>
+              element.textContent.includes(crypto)
+            );
+            console.log(index);
+            //alert("index  "+index);
+            console.log(listElements[index]); 
+            const bouton=(listElements[index].querySelectorAll(`.FastClose_closeBtn__ze4z7`))[0];
+            bouton.click();
+          }
+        },
+        args: [crypto,class_component/*, numero_component*/]  // Passer les arguments ici
+      });
+    }
+  });
+}
+/*element.click();
+
+// Optionnel : Simuler un événement 'change' si nécessaire
+const changeEvent = new Event("change", { bubbles: true });
+element.dispatchEvent(changeEvent);
+
+console.log("Button cliqué");*/
+
 function fillButton(class_component, numero_component, value) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
