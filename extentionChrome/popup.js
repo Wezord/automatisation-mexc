@@ -278,14 +278,18 @@ async function process_alert(alerte){
         await buy_long(stopLoss, valueStopLoss, 90);
       }
       else if (position == "short" && type == "sell"){
-        await close_short();
+        closeTrade(nomActif, "short");
+        await attendre(1000);
       }
       else if (position == "long" && type == "sell"){
-        await close_long();
+        closeTrade(nomActif, "long");
+        await attendre(1000);
       }
       else if(position == "flat"){
-        await close_long();
-        await close_short();
+        closeTrade(nomActif, "long");
+        await attendre(1000);
+        closeTrade(nomActif, "short");
+        await attendre(1000);
       }
       else { 
         console.log("wut?")
@@ -557,7 +561,7 @@ function closeTrade(crypto,long){//crypto: les deux ou trois lettre majuscules q
           /*element=listElements[numero_component];*/
           
           if (listElements.length==0){
-              alert("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
+              //alert("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
               console.log("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
           }
           else{
