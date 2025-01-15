@@ -131,12 +131,12 @@ async function process_alert(alerte){
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
         await attendre(500);
-        await buy_short(stopLoss, valueStopLoss, selectQuantite);
+        await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
         await searchCrypto(nomActif);
         await attendre(500);
-        await buy_long(stopLoss, valueStopLoss, selectQuantite);
+        await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else if (position == "short" && type == "sell"){
         closeTrade(nomActif, "short");
@@ -271,60 +271,7 @@ function fillButton(class_component, numero_component, value) {
     });     
 }
 
-async function buy_long(stopLoss,  value_stopLoss = 0.1, value_buy=10){
-  //Clique sur ouvrir
-  click_button(".handle_active__EaFtQ", 0);
-  await attendre(2000);
-  click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 0);
-  await attendre(2000);
-  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, value_buy);
-  await attendre(2000);
-  if(stopLoss > 0){
-    console.log("stoploss")
-    // Coche la case long Sl
-    click_button(".ant-checkbox-input", 2);
-    await attendre(2000);
-    // Clique sur la case du stoploss
-    click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
-    await attendre(2000);
-    // Remplie la case
-    fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, value_stopLoss);
-    await attendre(2000);
-    console.log("achat");
-  }
-  // Appuie sur open long
-  click_button(".component_longBtn__BBkFR", 0);
-  await attendre(2000);
-  console.log("ordre réalisé");
-}
-
-async function buy_short(stopLoss, value_stopLoss = 400, value_buy =10){
-  //Clique sur ouvrir
-  click_button(".handle_active__EaFtQ", 0);
-  await attendre(2000);
-  click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 0);
-  await attendre(2000);
-  fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 0, value_buy);
-  await attendre(2000);
-  if(stopLoss > 0){
-    console.log("stoploss")
-    // Coche la case long Sl
-    click_button(".ant-checkbox-input", 3);
-    await attendre(2000);
-    // Clique sur la case du stoploss
-    click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
-    await attendre(2000);
-    // Remplie la case
-    fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, 400);
-    await attendre(2000);
-    console.log("achat");
-  }
-  // Appuie sur open long
-  click_button(".component_shortBtn__s8HK4", 0);
-  await attendre(2000);
-  console.log("ordre réalisé");
-}
-async function buy(valeur,stopLoss=0,takeProfit=0,long=true){
+async function buy(valeur, long=true, stopLoss=0, valueStopLoss= 0, takeProfit=0){
   //Clique sur ouvrir
   click_button(".handle_active__EaFtQ", 0);
   await attendre(2000);

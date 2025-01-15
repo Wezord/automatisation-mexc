@@ -10,17 +10,18 @@ Actuellement :
 - Dans la partie pour envoyer une requête j'ai ajouté un appel à process_alerte pour traiter le JSON
 - Dans process_alerte il y a plusieurs appel de fonction mais le plus important c'est buy_long faudra vérifier la fonction et la modifier pour tout les autres cas
 - J'ai eu un crash co et ca peut ptetre arriver qu'on perde des alertes sur ca dcp
-
+- Pas oublier à mettre le bon message d'alerte
 
 
 A faire :
-- Combiner le code de clement d'achat avec le mien
-- J'ai eu un flat buy ?
+- Check les delays / Optimiser au max
 - Check que en changeant d'URL ca nous deconnecte pas.
     - Ca supprime les cookies mais j'ai changé la fonction et ca marchait bien faut juste vérifier sur tout les comptes
 - Faut prévoir comment gérer les multicomptes
     - Pour les strats groupés ca va faut juste faire en sorte de choisir la stratégie lorsqu'on execute l'extension
     - Pour les indivs jsp puisque manuellement on doit changer de compte donc soit on automatise le changement de compte soit on arrive à ouvrir une page par compte
+- API pour auto-reinvestissement + Vérifier les ordres
+- Setup sur son propre serveur web
 
 Amélioration : 
 - Ca envoie une requête pour delete une alerte une par une mais pour améliorer on pourrait envoyer une unique requête pour supprimer plusieurs alertes à la fin
