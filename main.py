@@ -84,11 +84,11 @@ def webhook():
         actif = data.get('actif')
         time = data.get('time')
         alert_message = data.get('alert_message')
-        if alert_message == "Exit short" or alert_message == "Exit long" :
+        if "Exit" in alert_message:
             type = 'sell'
         current_alert.append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
         print(nom)
-        print(f"Reçu :" + {'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})  # Afficher les données reçues dans la console
+        print(f"Reçu : " , {'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})  # Afficher les données reçues dans la console
          # Répondre au service qui a envoyé le webhook
         return jsonify({"status": "success", "message": "Webhook reçu"}), 200
 
