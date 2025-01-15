@@ -462,6 +462,41 @@ async function buy_short(stopLoss, value_stopLoss = 400, value_buy =10){
   await attendre(2000);
   console.log("ordre réalisé");
 }
+async function buy(valeur,stopLoss=0,takeProfit=0,long=true){
+  //Clique sur ouvrir
+  click_button(".handle_active__EaFtQ", 0);
+  await attendre(2000);
+  click_button("#mexc_contract_v_open_position .ant-input", 0);
+  await attendre(1000);
+  fillButton("#mexc_contract_v_open_position .ant-input", 0, valeur);
+  if(stopLoss > 0 || takeProfit>0){
+    console.log("SL/TP")
+    // Coche la case long Sl
+    long ?click_button(".ant-checkbox-input", 2):click_button(".ant-checkbox-input", 3);
+    await attendre(1000);
+    if (stopLoss>0){
+      // Clique sur la case du stoploss
+      click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
+      await attendre(1000);
+      // Remplie la case
+      fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, stopLoss);
+      await attendre(1000);
+      console.log("achat");
+    }
+    if(takeProfit>0){
+      // Clique sur la case du takeprofit
+      click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 1);
+      await attendre(1000);
+      // Remplie la case
+      fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 1, takeProfit);
+      await attendre(1000);
+      console.log("achat");
+    }
+  }
+  // Appuie sur open long/shirt
+  long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
+  console.log("ordre réalisé");
+}
 
 async function close_short(){
   click_button(".handle_vInner__IXFRx",0,true);
@@ -487,42 +522,6 @@ async function close_long(){
   console.log("ordre réalisé");
 }
 
-async function buy(valeur,stopLoss=0,takeProfit=0,long=true){
-  //Clique sur ouvrir
-  click_button(".handle_active__EaFtQ", 0);
-  await attendre(2000);
-  click_button("#mexc_contract_v_open_position .ant-input", 1);
-  await attendre(1000);
-  fillButton("#mexc_contract_v_open_position .ant-input", 1, valeur);
-  if(stopLoss > 0 || takeProfit>0){
-    console.log("SL/TP")
-    // Coche la case long Sl
-    long ?click_button(".ant-checkbox-input", 2):click_button(".ant-checkbox-input", 3);
-    await attendre(1000);
-    if (stopLoss>0){
-      // Clique sur la case du stoploss
-      click_button(".InputNumberExtend_wrapper__qxkpD", 4);
-      await attendre(1000);
-      // Remplie la case
-      fillButton(".InputNumberExtend_wrapper__qxkpD", 4, stopLoss);
-      await attendre(1000);
-      console.log("achat");
-    }
-    if(takeProfit>0){
-      // Clique sur la case du takeprofit
-      click_button(".InputNumberExtend_wrapper__qxkpD", 3);
-      await attendre(1000);
-      // Remplie la case
-      fillButton(".InputNumberExtend_wrapper__qxkpD", 3, takeProfit);
-      await attendre(1000);
-      console.log("achat");
-    }
-
-  }
-  // Appuie sur open long/shirt
-  long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
-  console.log("ordre réalisé");
-}
 
 async function searchCrypto(actif){
   click_button(".contractDetail_contractNameBox__IcVlT", 0);

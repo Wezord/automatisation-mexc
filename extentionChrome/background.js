@@ -85,7 +85,7 @@ function changeUser(stratSelect){
                 });
               };
     
-              attendreElement(stratSelect, 5000)
+              attendreElement(stratSelect, 15000)
                 .then((element) => {
                   console.log("Élément trouvé :", element);
                   console.log("Élément trouvé !");
