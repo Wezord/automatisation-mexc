@@ -537,4 +537,57 @@ function attendre(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function closeTrade(crypto,long){//crypto: les deux ou trois lettre majuscules qui définissent une crypto ex: BTC, ETH etc
+  //Long c'est simplement un bouléen qui va nous indiquer quel type de position doit être fermé
+  crypto=crypto+"USDT";
+  console.log(crypto);
+  class_component=".ant-table-row-level-0";
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTab = tabs[0];
+      const currentUrl = currentTab.url;
+      
+
+      // Injecter un script pour modifier l'URL de la page
+      chrome.scripting.executeScript({
+        target: { tabId: currentTab.id },
+        func: (crypto,class_component,long) => {
+          const listElements = document.querySelectorAll(class_component);
+          //console.log("liste elements :",listElements);
+          /*element=listElements[numero_component];*/
+          
+          if (listElements.length==0){
+              alert("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
+              console.log("Aucun trade ouvert n'a été trouvé dans l'interfafe grahique !");
+          }
+          else{
+            const matchingElements = Array.from(listElements).filter((element) =>
+              element.textContent.trim().toLowerCase().includes(crypto.toLowerCase()));
+            const nbMatchingElements=matchingElements.length;
+            if (nbMatchingElements==1){
+              const bouton=(matchingElements[0].querySelectorAll(`.FastClose_closeBtn__ze4z7`))[0];
+              bouton.click();
+            }
+            else if(nbMatchingElements>1){
+              console.log(nbMatchingElements," éléments correponsdants ont été détectés");
+              const matchingElements2=Array.from(matchingElements).filter((element) =>
+                element.textContent.trim().toLowerCase().includes(long ? "long" : "short"));
+              console.log("Nombre de nouveaux éléments correspndants: ",matchingElements2.length);
+
+              if(matchingElements2.length==1){                
+                const bouton=(matchingElements2[0].querySelectorAll(`.FastClose_closeBtn__ze4z7`))[0];
+                bouton.click()
+              }
+              else{
+                console.log("Trop d'éléments correspondants. Abandon");
+              }
+            } 
+          }
+        },
+        args: [crypto,class_component,long]  // Passer les arguments ici
+      });
+    }
+  });
+}
+
   
