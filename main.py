@@ -61,7 +61,7 @@ def delete_alert():
             current_alert = [d for d in current_alert if not (d["actif"] == value["actif"] and d["strategy_order_name"] == value["strategy_order_name"] and d["alert_message"] == value["alert_message"])]
         
         elif action == "delete_all":
-            current_alert = [d for d in current_alert if not d["strateg_order_name"] == value]
+            current_alert = [d for d in current_alert if not d["strategy_order_name"] == value]
 
         return jsonify({"message": "Alerte supprimé"}), 200
 
@@ -87,18 +87,11 @@ def webhook():
         actif = data.get('actif')
         time = data.get('time')
         alert_message = data.get('alert_message')
-        if "Exit" in alert_message and "short" in alert_message:
-            type = 'sell'
-            position = 'short'
-        elif "Exit" in alert_message and "long" in alert_message:
-            type = 'sell'
-            position = 'long'
-        elif "Entry" in alert_message and "short" in alert_message:
-            type = 'buy'
-            position = 'short'
-        elif "Entry" in alert_message and "long" in alert_message:
-            type = 'buy'
-            position = 'short'
+        if position == "short":
+            if type == 'sell':
+                type = 'buy'
+            elif type == 'buy':
+                type == 'sell'
         current_alert.append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
         print(nom)
         print(f"Reçu : " , {'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})  # Afficher les données reçues dans la console
