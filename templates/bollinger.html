@@ -78,15 +78,78 @@
         </tbody>
     </table>
 
-    <script>
+    <button id="deleteAll" class="delete-btn" onclick="deleteAll()">Supprimer tout</button>
 
+    <script>
+        const strategy_name = "bollinger";
+        // Fonction pour supprimer une ligne
         // Fonction pour supprimer une ligne
         function deleteRow(button) {
             // Trouve la ligne parente du bouton cliqué
-            const row = button.parentElement.parentElement;
+            const strategy_order_name = strategy_name;
+            const actif = row.cells[0].textContent;  // Exemple : colonne Actif
+            const type = row.cells[2].textContent;  // Exemple : colonne Type (Long/Short)
+            const time = row.cells[4].textContent;
+            const position = row.cells[1];
+            const alert_message = row.cells[3].textContent;
 
             // Supprime la ligne du tableau
             row.remove();
+
+            // Envoie une requête POST au serveur pour notifier la suppression
+            fetch('/delete_alert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: "delete", // Données spécifiques de la ligne
+                    alerte: {'strategy_order_name': strategy_name, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' : position, 'stop_loss': "1", 'time':time}
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Ligne supprimée et serveur notifié.');
+                } else {
+                    console.error('Erreur lors de la notification au serveur.', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur réseau lors de la notification au serveur :', error);
+            });
+        }
+
+        function deleteAll(){
+            const tbody = document.getElementById('strategiesTable').getElementsByTagName('tbody')[0];
+    
+            // Vérifie si tbody existe avant de continuer
+            if (tbody) {
+                // Vide toutes les lignes du tableau
+                tbody.innerHTML = '';
+                fetch('/delete_alert', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: "delete_all", // Données spécifiques de la ligne
+                        alerte: strategy_name
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Ligne supprimée et serveur notifié.');
+                    } else {
+                        console.error('Erreur lors de la notification au serveur.', response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur réseau lors de la notification au serveur :', error);
+                });
+                console.log('Toutes les lignes ont été supprimées.');
+            } else {
+                console.error('Erreur : le tableau ou le tbody est introuvable.');
+            }
         }
 
         // Fonction pour mettre à jour le tableau avec les stratégies
@@ -106,7 +169,7 @@
 
                 // Ajouter une ligne pour chaque stratégie dans la liste
                 strategies.forEach(function(strategy) {
-                    if(strategy.strategy_order_name == "bollinger") {
+                    if(strategy.strategy_order_name == strategy_name) {
                         var row = tbody.insertRow();
 
                         var cell1 = row.insertCell(0);

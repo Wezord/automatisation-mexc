@@ -46,7 +46,7 @@ async function infiniteTrade(strat_to_use = "alert"){
       alert("Erreur lors de la requête : " + error.message);
     }
   }
-  await attendre(1000);
+  await attendre(30000);
   infiniteTrade(strat);
 }
 
@@ -271,7 +271,7 @@ function fillButton(class_component, numero_component, value) {
     });     
 }
 
-async function buy(valeur, long=true, stopLoss=0, valueStopLoss= 0, takeProfit=0){
+async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0){
   //Clique sur ouvrir
   click_button(".handle_active__EaFtQ", 0);
   await attendre(2000);
@@ -288,7 +288,7 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss= 0, takeProfit=0
       click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
       await attendre(1000);
       // Remplie la case
-      fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, stopLoss);
+      fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, valueStopLoss);
       await attendre(1000);
       console.log("achat");
     }

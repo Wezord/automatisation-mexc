@@ -58,7 +58,10 @@ def delete_alert():
         value = data.get("alerte")
 
         if action == "delete":
-            current_alert = [d for d in current_alert if not (d["actif"] == value["actif"] and d["strategy_order_name"] == value["strategy_order_name"] and d["stop_loss"] == value["stop_loss"])]
+            current_alert = [d for d in current_alert if not (d["actif"] == value["actif"] and d["strategy_order_name"] == value["strategy_order_name"] and d["alert_message"] == value["alert_message"])]
+        
+        elif action == "delete_all":
+            current_alert = [d for d in current_alert if not d["strateg_order_name"] == value]
 
         return jsonify({"message": "Alerte supprimé"}), 200
 
