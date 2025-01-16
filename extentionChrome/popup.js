@@ -7,7 +7,7 @@ const dicStrats = {
   "X3-test": 69356848,
   "Bollinge-Test": 69261661
 };
-const ngrokURL = "https://2722-146-70-142-83.ngrok-free.app"
+const ngrokURL = "https://073a-83-202-127-170.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
