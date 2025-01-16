@@ -185,40 +185,50 @@ async function delete_alert(alerte_to_delete){
   }
 }
 
-function click_button(class_component, numero_component, isHandler=false){
+function click_button(class_component, numero_component, isHandler = false) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
       const currentTab = tabs[0];
       const currentUrl = currentTab.url;
 
-      // Injecter un script pour modifier l'URL de la page
-    chrome.scripting.executeScript({
-      target: { tabId: currentTab.id },
-      func: (class_component, numero_component, isHandler) => {
-        const listElements = document.querySelectorAll(class_component);
-        element=listElements[numero_component];
-        if(isHandler){
-          element=element.children[1];
-        }
-        
-        if (!element){
-          console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché'.");
-        }
-        else{
-            element.click();
+      // Injecter un script pour vérifier l'état de la case à cocher avant de cliquer
+      chrome.scripting.executeScript({
+        target: { tabId: currentTab.id },
+        func: (class_component, numero_component, isHandler) => {
+          const listElements = document.querySelectorAll(class_component);
+          let element = listElements[numero_component];
+          if (isHandler) {
+            element = element.children[1];
+          }
 
-            // Optionnel : Simuler un événement 'change' si nécessaire
-            const changeEvent = new Event("change", { bubbles: true });
-            element.dispatchEvent(changeEvent);
-    
-            console.log("Button cliqué");
-        }
-      },
-      args: [class_component, numero_component, isHandler]  // Passer les arguments ici
+          if (!element) {
+            console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché.");
+          } else {
+            // Vérifier si la case à cocher est déjà cochée
+            if (element.type === "checkbox") {
+              if (element.checked) {
+                console.log("La case à cocher est déjà cochée. Aucun clic effectué.");
+              } else {
+                // Si elle n'est pas cochée, effectuer le clic
+                element.click();
+
+                // Optionnel : Simuler un événement 'change' si nécessaire
+                const changeEvent = new Event("change", { bubbles: true });
+                element.dispatchEvent(changeEvent);
+
+                console.log("Case à cocher cliquée et cochée.");
+              }
+            } else {
+              console.log("L'élément ciblé n'est pas une case à cocher.");
+            }
+          }
+        },
+        args: [class_component, numero_component, isHandler] // Passer les arguments ici
       });
-  }
+    }
   });
 }
+
 
 function changementURL2(data){
   return new Promise((resolve, reject) => {
