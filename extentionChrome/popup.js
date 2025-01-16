@@ -102,6 +102,23 @@ function demandeChangementUtilisateur(data) {
       );
   });
 }
+/*async function demandeChangementUtilisateur(stratSelect) {
+  const url = "https://www.mexc.co/fr-FR/user/switch-account";
+  const stratSelect = varStratSelect; // Assure-toi que cette variable est définie
+  
+  //alert("Valeur de stratSelect :"+ stratSelect);
+  //attendre(2000);
+  demandeChangementUtilisateur(stratSelect);
+  // Ouvrir un nouvel ongletC
+  chrome.tabs.create({ url: url }, async (tab) => {
+    console.log("Nouvel onglet ouvert :", tab);
+
+    // Attendre 10 secondes pour que la page charge (augmente si nécessaire)
+    await attendre(10000);
+
+    // Injecter le code dans le nouvel onglet
+  }
+}*/
 
 // Initialiser la liste déroulante
 populateSelectOptions();
@@ -219,7 +236,7 @@ function click_button(class_component, numero_component, isHandler = false) {
                 console.log("Case à cocher cliquée et cochée.");
               }
             } else {
-              console.log("L'élément ciblé n'est pas une case à cocher.");
+              element.click();
             }
           }
         },
@@ -316,9 +333,49 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   console.log("ordre réalisé");
 }
+function doitOuvrirRecherche() {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length > 0) {
+        const currentTab = tabs[0];
+
+        chrome.scripting.executeScript({
+          target: { tabId: currentTab.id },
+          func: () => {
+            const listElements = document.querySelectorAll(".ResizableWrapper_resizableWrapper__Z_aE5");
+            console.log("coucou je suis appelé");
+            console.log(listElements);
+            // Retourne true si aucun élément trouvé
+            return listElements.length === 0;
+          }
+        }, (results) => {
+          // `results` contient les valeurs retournées par le script injecté
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError.message);
+            reject(false);
+          } else {
+            // Récupérer le résultat du script injecté
+            const result = results[0]?.result;
+            resolve(result);
+          }
+        });
+      } else {
+        reject(false);
+      }
+    });
+  });
+} 
 
 async function searchCrypto(actif){
-  click_button(".contractDetail_contractNameBox__IcVlT", 0);
+  // ResizableWrapper_resizableWrapper__Z_aE5
+  var doitOuvrir;
+  doitOuvrirRecherche().then((doitOuvrir) => {
+    if (doitOuvrir) {
+      click_button(".contractDetail_contractNameBox__IcVlT", 0);
+    } else {
+      console.log("La recherche n'a pas besoin d'être ouverte.");
+    }
+  });
   await attendre(1000);
   click_button(".ant-input", 3);
   await attendre(500);
