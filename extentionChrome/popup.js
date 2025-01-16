@@ -333,6 +333,7 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   console.log("ordre réalisé");
 }
+
 function doitOuvrirRecherche() {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
