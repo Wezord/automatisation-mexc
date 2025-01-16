@@ -92,6 +92,8 @@ def webhook():
                 type = 'buy'
             elif type == 'buy':
                 type == 'sell'
+        if position == "flat":
+            type == 'sell'
         current_alert.append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
         print(nom)
         print(f"Reçu : " , {'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})  # Afficher les données reçues dans la console

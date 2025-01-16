@@ -320,9 +320,9 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
 async function searchCrypto(actif){
   click_button(".contractDetail_contractNameBox__IcVlT", 0);
   await attendre(1000);
-  click_button(".ant-input", 2);
+  click_button(".ant-input", 3);
   await attendre(500);
-  fillButton(".ant-input", 2, actif);
+  fillButton(".ant-input", 3, actif);
   await attendre(1000);
   click_button(".Pairs_row__XKonK", 1);
   await attendre(2000);
