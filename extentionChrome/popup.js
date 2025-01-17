@@ -7,7 +7,7 @@ const dicStrats = {
   "X3-test": 69356848,
   "Bollinge-Test": 69261661
 };
-const ngrokURL = "https://073a-83-202-127-170.ngrok-free.app"
+const ngrokURL = "https://7c50-146-70-194-109.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -45,8 +45,8 @@ async function infiniteTrade(strat_to_use = "alert"){
       console.error("Erreur :", error);
       alert("Erreur lors de la requête : " + error.message);
     }
+    await attendre(3000);
   }
-  await attendre(30000);
   infiniteTrade(strat);
 }
 
@@ -143,7 +143,7 @@ async function process_alert(alerte){
       // Change l'url
       delete_alert(element);
       //changementURL2("https://futures.mexc.com/fr-FR/exchange/" + nomActif + "_USDT?type=linear_swap");
-      await attendre(3000);
+      //await attendre(3000);
       // Achete au long
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
@@ -156,18 +156,15 @@ async function process_alert(alerte){
         await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else if (position == "short" && type == "sell"){
-        closeTrade(nomActif, "short");
-        await attendre(1000);
+        await closeTrade(nomActif, "short");
       }
       else if (position == "long" && type == "sell"){
-        closeTrade(nomActif, "long");
-        await attendre(1000);
+        await closeTrade(nomActif, "long");
       }
       else if(position == "flat"){
-        closeTrade(nomActif, "long");
-        await attendre(1000);
-        closeTrade(nomActif, "short");
-        await attendre(1000);
+        await closeTrade(nomActif, "long");
+        await attendre(200);
+        await closeTrade(nomActif, "short");
       }
       else { 
         console.log("wut?")
@@ -202,7 +199,7 @@ async function delete_alert(alerte_to_delete){
   }
 }
 
-function click_button(class_component, numero_component, isHandler = false) {
+/* function click_button(class_component, numero_component, option = false) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
       const currentTab = tabs[0];
@@ -211,10 +208,10 @@ function click_button(class_component, numero_component, isHandler = false) {
       // Injecter un script pour vérifier l'état de la case à cocher avant de cliquer
       chrome.scripting.executeScript({
         target: { tabId: currentTab.id },
-        func: (class_component, numero_component, isHandler) => {
+        func: (class_component, numero_component, option) => {
           const listElements = document.querySelectorAll(class_component);
           let element = listElements[numero_component];
-          if (isHandler) {
+          if (option) {
             element = element.children[1];
           }
 
@@ -240,12 +237,47 @@ function click_button(class_component, numero_component, isHandler = false) {
             }
           }
         },
-        args: [class_component, numero_component, isHandler] // Passer les arguments ici
+        args: [class_component, numero_component, option] // Passer les arguments ici
       });
     }
   });
 }
+*/
 
+function click_button(class_component, numero_component, option = "") {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTab = tabs[0];
+      const currentUrl = currentTab.url;
+
+      // Injecter un script pour vérifier l'état de la case à cocher avant de cliquer
+      chrome.scripting.executeScript({
+        target: { tabId: currentTab.id },
+        func: (class_component, numero_component, option) => {
+          const listElements = document.querySelectorAll(class_component);
+          let element = listElements[numero_component];
+          if (option != "") {
+            console.log("option");
+          }
+
+          if (!element) {
+            console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché.");
+          } else {
+                // Si elle n'est pas cochée, effectuer le clic
+                element.click();
+
+                // Optionnel : Simuler un événement 'change' si nécessaire
+                const changeEvent = new Event("change", { bubbles: true });
+                element.dispatchEvent(changeEvent);
+
+                console.log("Case à cocher cliquée et cochée.");
+          }
+        },
+        args: [class_component, numero_component, option] // Passer les arguments ici
+      });
+    }
+  });
+}
 
 function changementURL2(data){
   return new Promise((resolve, reject) => {
@@ -332,6 +364,9 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
   // Appuie sur open long/shirt
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   console.log("ordre réalisé");
+  if(stopLoss>0){
+    long ?click_button(".ant-checkbox-input", 2):click_button(".ant-checkbox-input", 3);
+  }
 }
 
 function doitOuvrirRecherche() {
@@ -382,7 +417,7 @@ async function searchCrypto(actif){
   await attendre(500);
   fillButton(".ant-input", 3, actif);
   await attendre(1000);
-  click_button(".Pairs_row__XKonK", 1);
+  click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
   await attendre(2000);
 }
 
@@ -390,7 +425,7 @@ function attendre(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function closeTrade(crypto,long){//crypto: les deux ou trois lettre majuscules qui définissent une crypto ex: BTC, ETH etc
+async function closeTrade(crypto,long){//crypto: les deux ou trois lettre majuscules qui définissent une crypto ex: BTC, ETH etc
   //Long c'est simplement un bouléen qui va nous indiquer quel type de position doit être fermé
   //crypto=crypto+"USDT";
   console.log(crypto);
