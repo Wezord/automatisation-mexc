@@ -131,7 +131,7 @@ populateSelectOptions();
 async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
     // Parcours les alertes
-    for (const element of alerte["strategies"]) {
+    for (const element of [...alerte["strategies"]]) {
       const nomActif = element["actif"].split(".")[0];
       const position = element.position;
       const type = element.type;
@@ -139,6 +139,7 @@ async function process_alert(alerte){
       const valueStopLoss = parseFloat(element.alert_message, 10);
       if (type == 'sell'){
         delete_alert(element);
+        alerte["strategies"] = alerte["strategies"].filter((strat) => strat !== element);
         if (position == "short"){
           await closeTrade(nomActif, "short");
         }
@@ -152,17 +153,12 @@ async function process_alert(alerte){
         await attendre(200);
         await closeTrade(nomActif, "short");
       }
-      await attendre(200);
-      
-      const index = alerte["strategies"].indexOf(element);
-      if (index > -1) {
-        alerte["strategies"].splice(index, 1); // Supprime l'élément par son index
-      }
-      
+      await attendre(1000);
+
     }
     for (const element of alerte["strategies"]) {
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
-      //const nomActif = element["actif"].split("USDT")[0];
+      // const nomActif = element["actif"].split("USDT")[0];
       const nomActif = element["actif"].split(".")[0];
       const position = element.position;
       const type = element.type;

@@ -87,6 +87,10 @@ def webhook():
         actif = data.get('actif')
         time = data.get('time')
         alert_message = data.get('alert_message')
+        if nom == "BNXNEXUSDT.P":
+            nom = 'BNXUSDT.P'
+        elif nom == "FILECOINUSDT.P":
+            nom = "FILUSDT.P"
         if position == "short":
             if type == 'sell':
                 type = 'buy'
