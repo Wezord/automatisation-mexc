@@ -170,12 +170,12 @@ async function process_alert(alerte){
       // Achete au long
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(500);
+        await attendre(2500);
         await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(500);
+        await attendre(2500);
         await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else { 
@@ -209,51 +209,6 @@ async function delete_alert(alerte_to_delete){
     console.error("Erreur :", error);
   }
 }
-
-/* function click_button(class_component, numero_component, option = false) {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length > 0) {
-      const currentTab = tabs[0];
-      const currentUrl = currentTab.url;
-
-      // Injecter un script pour vérifier l'état de la case à cocher avant de cliquer
-      chrome.scripting.executeScript({
-        target: { tabId: currentTab.id },
-        func: (class_component, numero_component, option) => {
-          const listElements = document.querySelectorAll(class_component);
-          let element = listElements[numero_component];
-          if (option) {
-            element = element.children[1];
-          }
-
-          if (!element) {
-            console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché.");
-          } else {
-            // Vérifier si la case à cocher est déjà cochée
-            if (element.type === "checkbox") {
-              if (element.checked) {
-                console.log("La case à cocher est déjà cochée. Aucun clic effectué.");
-              } else {
-                // Si elle n'est pas cochée, effectuer le clic
-                element.click();
-
-                // Optionnel : Simuler un événement 'change' si nécessaire
-                const changeEvent = new Event("change", { bubbles: true });
-                element.dispatchEvent(changeEvent);
-
-                console.log("Case à cocher cliquée et cochée.");
-              }
-            } else {
-              element.click();
-            }
-          }
-        },
-        args: [class_component, numero_component, option] // Passer les arguments ici
-      });
-    }
-  });
-}
-*/
 
 function click_button(class_component, numero_component, option = "") {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -344,9 +299,9 @@ function fillButton(class_component, numero_component, value) {
 async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0){
   //Clique sur ouvrir
   click_button(".handle_active__EaFtQ", 0);
-  await attendre(2000);
+  await attendre(500);
   click_button("#mexc_contract_v_open_position .ant-input", 0);
-  await attendre(1000);
+  await attendre(500);
   fillButton("#mexc_contract_v_open_position .ant-input", 0, valeur);
   if(stopLoss > 0 || takeProfit>0){
     console.log("SL/TP")
@@ -356,10 +311,10 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
     if (stopLoss>0){
       // Clique sur la case du stoploss
       click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
-      await attendre(1000);
+      await attendre(500);
       // Remplie la case
       fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, valueStopLoss);
-      await attendre(1000);
+      await attendre(500);
       console.log("achat");
     }
     if(takeProfit>0){
@@ -427,9 +382,8 @@ async function searchCrypto(actif){
   click_button(".ant-input", 3);
   await attendre(500);
   fillButton(".ant-input", 3, actif);
-  await attendre(1000);
+  await attendre(500);
   click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
-  await attendre(2000);
 }
 
 function attendre(ms) { 
