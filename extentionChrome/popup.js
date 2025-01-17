@@ -153,6 +153,12 @@ async function process_alert(alerte){
         await closeTrade(nomActif, "short");
       }
       await attendre(200);
+      
+      const index = alerte["strategies"].indexOf(element);
+      if (index > -1) {
+        alerte["strategies"].splice(index, 1); // Supprime l'élément par son index
+      }
+      
     }
     for (const element of alerte["strategies"]) {
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
@@ -185,7 +191,6 @@ async function process_alert(alerte){
       await attendre(1000);
     }
   }
-  return alerte;
 }
 
 async function delete_alert(alerte_to_delete){
