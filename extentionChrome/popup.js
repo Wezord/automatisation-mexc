@@ -7,7 +7,7 @@ const dicStrats = {
   "X3-test": 69356848,
   "Bollinge-Test": 69261661
 };
-const ngrokURL = "https://7c50-146-70-194-109.ngrok-free.app"
+const ngrokURL = "https://b171-79-127-134-56.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -184,7 +184,7 @@ async function process_alert(alerte){
         console.log("wut?")
       }
       // Supprime l'alerte
-      await attendre(1000);
+      await attendre(1500);
     }
   }
 }
