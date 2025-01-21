@@ -7,7 +7,7 @@ const dicStrats = {
   "X3-test": 69356848,
   "Bollinge-Test": 69261661
 };
-const ngrokURL = "https://b171-79-127-134-56.ngrok-free.app"
+const ngrokURL = "https://975f-79-127-134-17.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -18,7 +18,9 @@ async function infiniteTrade(strat_to_use = "alert"){
   const strat = strat_to_use;
   const url = ngrokURL + "/" + strat;
   console.log(strategies);
-  if(Object.keys(strategies).length > 0){
+  
+  while(!(false)==true){
+    if(Object.keys(strategies).length > 0){
     console.log("process data");
     await process_alert(strategies);
     strategies = [];
@@ -45,7 +47,7 @@ async function infiniteTrade(strat_to_use = "alert"){
       console.error("Erreur :", error);
       alert("Erreur lors de la requête : " + error.message);
     }
-    await attendre(3000);
+    await attendre(3000);}
   }
   infiniteTrade(strat);
 }
@@ -53,9 +55,12 @@ async function infiniteTrade(strat_to_use = "alert"){
 // Clique sur démarrer le Bot
 let strategies = [];
 document.getElementById("sendRequest").addEventListener("click", async () => {
+  
+  click_button(".quickTrading_closeIcon__pRcJ5",0);
 
   //preventDefault(); // Empêcher le rechargement de la page
   // Récupérer la clé sélectionnée
+
   const selectedKey = selectElement.value;
   selectStrat = selectedKey;
   selectQuantite = inputElement.value;
@@ -66,6 +71,7 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
 
   // Afficher la valeur dans l'élément <p>
   resultElement.textContent = `Valeur sélectionnée : ${value}`;
+
 
   infiniteTrade(selectStrat);
 });
