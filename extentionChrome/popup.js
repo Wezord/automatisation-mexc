@@ -13,42 +13,46 @@ var varStratSelect;
 var selectStrat;
 var selectQuantite;
 
-// Boucle récursive pour récupérer les alertes
-async function infiniteTrade(strat_to_use = "alert"){
+async function infiniteTrade(strat_to_use = "alert") {
   const strat = strat_to_use;
-  const url = ngrokURL + "/" + strat;
-  console.log(strategies);
-  if(Object.keys(strategies).length > 0){
-    console.log("process data");
-    await process_alert(strategies);
-    strategies = [];
-  }
-  else {
-    console.log("get new data");
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Custom-Message": "get_alert"
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`);
+  const url = `${ngrokURL}/${strat}`;
+
+  while (true) {
+    console.log(strategies);
+
+    if (Object.keys(strategies).length > 0) {
+      console.log("Processing data...");
+      await process_alert(strategies);
+      strategies = [];
+    } else {
+      console.log("Fetching new data...");
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Message": "get_alert",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Response:", data);
+        strategies = data; // Update strategies with the fetched data
+      } catch (error) {
+        console.error("Error:", error);
+        alert(`Error during the request: ${error.message}`);
       }
-      const data = await response.json();
-      console.log("Réponse :", data);
-      // Envoie le json des stratégies à process 
-      strategies = data;
-    } 
-    catch (error) {
-      console.error("Erreur :", error);
-      alert("Erreur lors de la requête : " + error.message);
     }
+
+    // Wait for a while before the next iteration
     await attendre(3000);
   }
-  infiniteTrade(strat);
 }
+
 
 // Clique sur démarrer le Bot
 let strategies = [];
@@ -88,6 +92,7 @@ function populateSelectOptions() {
     selectElement.appendChild(option);
   }
 }
+
 function demandeChangementUtilisateur(data) {
   return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage(
@@ -102,26 +107,6 @@ function demandeChangementUtilisateur(data) {
       );
   });
 }
-/*async function demandeChangementUtilisateur(stratSelect) {
-  const url = "https://www.mexc.co/fr-FR/user/switch-account";
-  const stratSelect = varStratSelect; // Assure-toi que cette variable est définie
-  
-  //alert("Valeur de stratSelect :"+ stratSelect);
-  //attendre(2000);
-  demandeChangementUtilisateur(stratSelect);
-  // Ouvrir un nouvel ongletC
-  chrome.tabs.create({ url: url }, async (tab) => {
-    console.log("Nouvel onglet ouvert :", tab);
-
-    // Attendre 10 secondes pour que la page charge (augmente si nécessaire)
-    await attendre(10000);
-
-    // Injecter le code dans le nouvel onglet
-  }
-}*/
-
-// Initialiser la liste déroulante
-populateSelectOptions();
 
 /////////////////////////////////////////////////////////////////
 //////////////FIN CHANGEMENT COMPTE//////////////////////////////
@@ -165,19 +150,17 @@ async function process_alert(alerte){
       const stopLoss = parseInt(element.stop_loss, 10);
       const valueStopLoss = parseFloat(element.alert_message, 10);
       console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " ");
-      // Change l'url
+
       delete_alert(element);
-      //changementURL2("https://futures.mexc.com/fr-FR/exchange/" + nomActif + "_USDT?type=linear_swap");
-      //await attendre(3000);
       // Achete au long
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(2500);
+        await attendre(3000);
         await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(2500);
+        await attendre(3000);
         await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else { 
@@ -302,17 +285,17 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
   click_button(".handle_active__EaFtQ", 0);
   await attendre(500);
   click_button("#mexc_contract_v_open_position .ant-input", 0);
-  await attendre(500);
+  await attendre(200);
   fillButton("#mexc_contract_v_open_position .ant-input", 0, valeur);
   if(stopLoss > 0 || takeProfit>0){
     console.log("SL/TP")
     // Coche la case long Sl
     long ?click_button(".ant-checkbox-input", 2):click_button(".ant-checkbox-input", 3);
-    await attendre(1000);
+    await attendre(500);
     if (stopLoss>0){
       // Clique sur la case du stoploss
       click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
-      await attendre(500);
+      await attendre(200);
       // Remplie la case
       fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, valueStopLoss);
       await attendre(500);
@@ -321,18 +304,20 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
     if(takeProfit>0){
       // Clique sur la case du takeprofit
       click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 1);
-      await attendre(1000);
+      await attendre(300);
       // Remplie la case
       fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 1, takeProfit);
-      await attendre(1000);
+      await attendre(500);
       console.log("achat");
     }
   }
   // Appuie sur open long/shirt
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
+  await attendre(300);
   console.log("ordre réalisé");
   if(stopLoss>0){
     long ?click_button(".ant-checkbox-input", 2):click_button(".ant-checkbox-input", 3);
+    await attendre(300);
   }
 }
 
