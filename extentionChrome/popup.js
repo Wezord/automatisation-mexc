@@ -370,6 +370,14 @@ async function searchCrypto(actif){
   fillButton(".ant-input", 3, actif);
   await attendre(500);
   click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
+  doitOuvrirRecherche().then((doitOuvrir) => {
+    if (doitOuvrir) {
+      {}
+    } else {
+      click_button(".contractDetail_contractNameBox__IcVlT", 0);
+      console.log("Fermeture manuelle de la boite de recherche.");
+    }
+  });
 }
 
 function attendre(ms) { 

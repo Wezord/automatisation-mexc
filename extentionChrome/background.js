@@ -65,6 +65,7 @@ function changeUser(stratSelect){
                 return new Promise((resolve, reject) => {
                   const interval = 100; // Vérifie toutes les 100 ms
                   let timeElapsed = 0;
+                  console.assert.log("attente de l'élément");
                   const timer = setInterval(() => {
                     const element = document.evaluate(
                       `//*[contains(text(), '${selector}')]`,
