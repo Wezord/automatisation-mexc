@@ -214,6 +214,8 @@ function click_button(class_component, numero_component, option = "") {
             if (element.type === "checkbox"){
               if (element.checked) {
                 console.log("La case à cocher est déjà cochée. Aucun clic effectué.");
+                ///////////////////////////////////////////////////////////////////
+                //EN CAS DE BUG AVEC LA VERIFICATION DE CASE, SUPPRIMER CETTE LIGNE
                 acliquer=0;
               }
             }
