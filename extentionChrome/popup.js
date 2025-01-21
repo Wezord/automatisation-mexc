@@ -5,7 +5,7 @@ const dicStrats = {
   "bollinger" : 3,
   "moving" : 4
 };
-const ngrokURL = "https://975f-79-127-134-17.ngrok-free.app"
+const ngrokURL = "https://idrfrance.ngrok.app"
 
 var varStratSelect;
 var selectStrat;
