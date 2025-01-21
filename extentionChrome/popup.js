@@ -3,9 +3,7 @@ const dicStrats = {
   "x3" : 1,
   "rsi": 2,
   "bollinger" : 3,
-  "moving" : 4,
-  "X3-test": 69356848,
-  "Bollinge-Test": 69261661
+  "moving" : 4
 };
 const ngrokURL = "https://975f-79-127-134-17.ngrok-free.app"
 
@@ -207,21 +205,28 @@ function click_button(class_component, numero_component, option = "") {
         func: (class_component, numero_component, option) => {
           const listElements = document.querySelectorAll(class_component);
           let element = listElements[numero_component];
-          if (option != "") {
-            console.log("option");
-          }
+          var acliquer=1
+
 
           if (!element) {
             console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché.");
           } else {
-                // Si elle n'est pas cochée, effectuer le clic
-                element.click();
+            if (element.type === "checkbox"){
+              if (element.checked) {
+                console.log("La case à cocher est déjà cochée. Aucun clic effectué.");
+                acliquer=0;
+              }
+            }
+            if (acliquer){           
+             // Si elle n'est pas cochée, effectuer le clic
+            element.click();
 
-                // Optionnel : Simuler un événement 'change' si nécessaire
-                const changeEvent = new Event("change", { bubbles: true });
-                element.dispatchEvent(changeEvent);
+            // Optionnel : Simuler un événement 'change' si nécessaire
+            const changeEvent = new Event("change", { bubbles: true });
+            element.dispatchEvent(changeEvent);
 
-                console.log("Case à cocher cliquée et cochée.");
+            console.log("Case à cocher cliquée et cochée.");
+            }
           }
         },
         args: [class_component, numero_component, option] // Passer les arguments ici
