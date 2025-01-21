@@ -85,6 +85,7 @@
         // Fonction pour supprimer une ligne
         // Fonction pour supprimer une ligne
         function deleteRow(button) {
+            const row = button.parentElement.parentElement;
             // Trouve la ligne parente du bouton cliqué
             const strategy_order_name = strategy_name;
             const actif = row.cells[0].textContent;  // Exemple : colonne Actif
