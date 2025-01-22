@@ -123,6 +123,7 @@ async function process_alert(alerte){
       const type = element.type;
       const stopLoss = parseInt(element.stop_loss, 10);
       const valueStopLoss = parseFloat(element.alert_message, 10);
+      console.log("Traitement ...")
       if (type == 'sell'){
         delete_alert(element);
         alerte["strategies"] = alerte["strategies"].filter((strat) => strat !== element);
@@ -171,6 +172,9 @@ async function process_alert(alerte){
       await attendre(1500);
     }
   }
+  else {
+    console.log("Pas de donnée à process")
+  }
 }
 
 async function delete_alert(alerte_to_delete){
@@ -205,10 +209,10 @@ function click_button(class_component, numero_component, option = "") {
       chrome.scripting.executeScript({
         target: { tabId: currentTab.id },
         func: (class_component, numero_component, option) => {
-          const listElements = document.querySelectorAll(class_component);
-          let element = listElements[numero_component];
+          var listElements= document.querySelectorAll(class_component);
+          var element = listElements[numero_component];
+          
           var acliquer=1
-
 
           if (!element) {
             console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché.");
@@ -218,7 +222,7 @@ function click_button(class_component, numero_component, option = "") {
                 console.log("La case à cocher est déjà cochée. Aucun clic effectué.");
                 ///////////////////////////////////////////////////////////////////
                 //EN CAS DE BUG AVEC LA VERIFICATION DE CASE, SUPPRIMER CETTE LIGNE
-                acliquer=0;
+                //acliquer=0;
               }
             }
             if (acliquer){           
@@ -300,23 +304,23 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
   if(stopLoss > 0 || takeProfit>0){
     console.log("SL/TP")
     // Coche la case long Sl
-    long ?click_button(".ant-checkbox-input", 2):click_button(".ant-checkbox-input", 3);
+    long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);
     await attendre(500);
     if (stopLoss>0){
       // Clique sur la case du stoploss
-      click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 2);
+      click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1);
       await attendre(200);
       // Remplie la case
-      fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 2, valueStopLoss);
+      fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1, valueStopLoss);
       await attendre(500);
       console.log("achat");
     }
     if(takeProfit>0){
       // Clique sur la case du takeprofit
-      click_button(".InputNumberExtend_wrapper__qxkpD .ant-input", 1);
+      click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0);
       await attendre(300);
       // Remplie la case
-      fillButton(".InputNumberExtend_wrapper__qxkpD .ant-input", 1, takeProfit);
+      fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0, takeProfit);
       await attendre(500);
       console.log("achat");
     }
@@ -324,11 +328,8 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
   // Appuie sur open long/shirt
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   await attendre(300);
+  if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
   console.log("ordre réalisé");
-  if(stopLoss>0){
-    long ?click_button(".ant-checkbox-input", 2):click_button(".ant-checkbox-input", 3);
-    await attendre(300);
-  }
 }
 
 function doitOuvrirRecherche() {
@@ -374,12 +375,13 @@ async function searchCrypto(actif){
       console.log("La recherche n'a pas besoin d'être ouverte.");
     }
   });
-  await attendre(1000);
-  click_button(".ant-input", 3);
   await attendre(500);
-  fillButton(".ant-input", 3, actif);
+  click_button(".Pairs_searchSelect__i_dbG .ant-input", 0);
+  await attendre(100);
+  fillButton(".Pairs_searchSelect__i_dbG .ant-input", 0, actif);
+  await attendre(200);
+  click_button("[title='"+ actif + " Perpetual'" + "]", 0);
   await attendre(500);
-  click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
   doitOuvrirRecherche().then((doitOuvrir) => {
     if (doitOuvrir) {
       {}
