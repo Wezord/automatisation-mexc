@@ -107,6 +107,9 @@ function demandeChangementUtilisateur(data) {
   });
 }
 
+// Initialiser la liste déroulante
+populateSelectOptions();
+
 /////////////////////////////////////////////////////////////////
 //////////////FIN CHANGEMENT COMPTE//////////////////////////////
 
