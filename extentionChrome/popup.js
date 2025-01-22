@@ -42,7 +42,6 @@ async function infiniteTrade(strat_to_use = "alert") {
     } 
     catch (error) {
       console.error("Erreur :", error);
-      alert("Erreur lors de la requête : " + error.message);
     }
     await attendre(3000);}
   }
