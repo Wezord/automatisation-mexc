@@ -118,44 +118,51 @@ populateSelectOptions();
 // Fonction principale
 async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
-    // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
-    // const nomActif = element["actif"].split("USDT")[0];
-    const nomActif = element["actif"].split(".")[0];
-    const position = element.position;
-    const type = element.type;
-    const stopLoss = parseInt(element.stop_loss, 10);
-    const valueStopLoss = parseFloat(element.alert_message, 10);
-    console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " ");
+    // Parcours les alertes
+    for (const element of alerte["strategies"]) {
+      // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
+      // const nomActif = element["actif"].split("USDT")[0];
+      const nomActif = element["actif"].split(".")[0];
+      const position = element.position;
+      const type = element.type;
+      const stopLoss = parseInt(element.stop_loss, 10);
+      const valueStopLoss = parseFloat(element.alert_message, 10);
+      console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " ");
 
-    delete_alert(element);
-    // Achete au long
-    if(position == "short" && type == "buy"){
-      await searchCrypto(nomActif);
-      await attendre(3000);
-      await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
-    }
-    else if (position == "long" && type == "buy"){
-      await searchCrypto(nomActif);
-      await attendre(3000);
-      await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
-    }
-    else if (type == 'sell'){
-      if (position == "short"){
+      delete_alert(element);
+      // Achete au long
+      if(position == "short" && type == "buy"){
+        await searchCrypto(nomActif);
+        await attendre(3000);
+        await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
+      }
+      else if (position == "long" && type == "buy"){
+        await searchCrypto(nomActif);
+        await attendre(3000);
+        await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
+      }
+      else if (type == 'sell'){
+        if (position == "short"){
+          await closeTrade(nomActif, "short");
+        }
+        else if (position == "long"){
+          await closeTrade(nomActif, "long");
+        }
+      }
+      else if(position == "flat"){
+        await closeTrade(nomActif, "long");
+        await attendre(200);
         await closeTrade(nomActif, "short");
       }
-      else if (position == "long"){
-        await closeTrade(nomActif, "long");
+      else { 
+        console.log("wut?")
       }
+      // Supprime l'alerte
+      await attendre(500);
     }
-    else if(position == "flat"){
-      await closeTrade(nomActif, "long");
-      await attendre(200);
-      await closeTrade(nomActif, "short");
-    }
-    else { 
-      console.log("wut?")
-    }
-    await attendre(900);
+  }
+  else {
+    console.log("Pas de donnée à process")
   }
 }
 
