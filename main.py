@@ -1,4 +1,3 @@
-
 from flask_ngrok import run_with_ngrok
 from app import create_app
 

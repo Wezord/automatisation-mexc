@@ -285,14 +285,13 @@ function fillButton(class_component, numero_component, value) {
 
 async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0){
   //Clique sur ouvrir
-  click_button(".handle_active__EaFtQ", 0);
-  await attendre(500);
   click_button("#mexc_contract_v_open_position .ant-input", 0);
   await attendre(200);
   fillButton("#mexc_contract_v_open_position .ant-input", 0, valeur);
   if(stopLoss > 0 || takeProfit>0){
     console.log("SL/TP")
     // Coche la case long Sl
+    await attendre(100);
     long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);
     await attendre(500);
     if (stopLoss>0){
@@ -357,13 +356,7 @@ function doitOuvrirRecherche() {
 async function searchCrypto(actif){
   // ResizableWrapper_resizableWrapper__Z_aE5
   var doitOuvrir;
-  doitOuvrirRecherche().then((doitOuvrir) => {
-    if (doitOuvrir) {
-      click_button(".contractDetail_contractNameBox__IcVlT", 0);
-    } else {
-      console.log("La recherche n'a pas besoin d'être ouverte.");
-    }
-  });
+  click_button(".contractDetail_contractNameBox__IcVlT", 0);
   await attendre(500);
   click_button(".Pairs_searchSelect__i_dbG .ant-input", 0);
   await attendre(100);
