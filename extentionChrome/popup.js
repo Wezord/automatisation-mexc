@@ -11,6 +11,8 @@ var varStratSelect;
 var selectStrat;
 var selectQuantite;
 
+var countOpenOrder;
+
 async function infiniteTrade(strat_to_use = "alert") {
   const strat = strat_to_use;
   const url = ngrokURL + "/" + strat;
@@ -116,64 +118,44 @@ populateSelectOptions();
 // Fonction principale
 async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
-    // Parcours les alertes
-    for (const element of [...alerte["strategies"]]) {
-      const nomActif = element["actif"].split(".")[0];
-      const position = element.position;
-      const type = element.type;
-      const stopLoss = parseInt(element.stop_loss, 10);
-      const valueStopLoss = parseFloat(element.alert_message, 10);
-      console.log("Traitement ...")
-      if (type == 'sell'){
-        delete_alert(element);
-        alerte["strategies"] = alerte["strategies"].filter((strat) => strat !== element);
-        if (position == "short"){
-          await closeTrade(nomActif, "short");
-        }
-        else if (position == "long"){
-          await closeTrade(nomActif, "long");
-        }
-      }
-      else if(position == "flat"){
-        delete_alert(element);
-        await closeTrade(nomActif, "long");
-        await attendre(200);
+    // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
+    // const nomActif = element["actif"].split("USDT")[0];
+    const nomActif = element["actif"].split(".")[0];
+    const position = element.position;
+    const type = element.type;
+    const stopLoss = parseInt(element.stop_loss, 10);
+    const valueStopLoss = parseFloat(element.alert_message, 10);
+    console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " ");
+
+    delete_alert(element);
+    // Achete au long
+    if(position == "short" && type == "buy"){
+      await searchCrypto(nomActif);
+      await attendre(3000);
+      await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
+    }
+    else if (position == "long" && type == "buy"){
+      await searchCrypto(nomActif);
+      await attendre(3000);
+      await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
+    }
+    else if (type == 'sell'){
+      if (position == "short"){
         await closeTrade(nomActif, "short");
       }
-      await attendre(1000);
-
+      else if (position == "long"){
+        await closeTrade(nomActif, "long");
+      }
     }
-    for (const element of alerte["strategies"]) {
-      // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
-      // const nomActif = element["actif"].split("USDT")[0];
-      const nomActif = element["actif"].split(".")[0];
-      const position = element.position;
-      const type = element.type;
-      const stopLoss = parseInt(element.stop_loss, 10);
-      const valueStopLoss = parseFloat(element.alert_message, 10);
-      console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " ");
-
-      delete_alert(element);
-      // Achete au long
-      if(position == "short" && type == "buy"){
-        await searchCrypto(nomActif);
-        await attendre(3000);
-        await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
-      }
-      else if (position == "long" && type == "buy"){
-        await searchCrypto(nomActif);
-        await attendre(3000);
-        await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
-      }
-      else { 
-        console.log("wut?")
-      }
-      // Supprime l'alerte
-      await attendre(1500);
+    else if(position == "flat"){
+      await closeTrade(nomActif, "long");
+      await attendre(200);
+      await closeTrade(nomActif, "short");
     }
-  }
-  else {
-    console.log("Pas de donnée à process")
+    else { 
+      console.log("wut?")
+    }
+    await attendre(900);
   }
 }
 
@@ -380,7 +362,8 @@ async function searchCrypto(actif){
   await attendre(100);
   fillButton(".Pairs_searchSelect__i_dbG .ant-input", 0, actif);
   await attendre(200);
-  click_button("[title='"+ actif + " Perpetual'" + "]", 0);
+  // A changer en fonction de la langue
+  click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
   await attendre(500);
   doitOuvrirRecherche().then((doitOuvrir) => {
     if (doitOuvrir) {
