@@ -144,10 +144,12 @@ async function process_alert(alerte){
       }
       else if (type == 'sell'){
         if (position == "short"){
+          await attendre(500);
           await closeTrade(nomActif, false);
           await attendre(1000);
         }
         else if (position == "long"){
+          await attendre(500);
           await closeTrade(nomActif, true);
           await attendre(1000);
         }
