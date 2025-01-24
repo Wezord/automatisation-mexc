@@ -129,6 +129,8 @@ async function process_alert(alerte){
       const valueStopLoss = parseFloat(element.alert_message, 10);
       console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " ");
 
+      await delete_alert(element);
+
       // Achete au long
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
@@ -157,7 +159,6 @@ async function process_alert(alerte){
         console.log("wut?")
       }
       // Supprime l'alerte
-      await delete_alert(element);
       await attendre(500);
     }
   }
