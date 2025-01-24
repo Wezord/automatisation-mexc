@@ -11,14 +11,14 @@ def delete_alert():
         
         action = data.get("action")
         value = data.get("alerte")
-        
+
         if action == "delete":
             current_app.config['current_alert'] = [d for d in current_app.config['current_alert'] if not (d["actif"] == value["actif"] and d["strategy_order_name"] == value["strategy_order_name"] and d["alert_message"] == value["alert_message"])]
         elif action == "delete_all":
             current_app.config['current_alert'] = [d for d in current_app.config['current_alert'] if not d["strategy_order_name"] == value]
         if value["type"] == "buy":
-            current_app.config['open_order_count'] = current_app.config['open_order_count'] + 1
+            current_app.config['open_position_count'][value["strategy"]] = current_app.config['open_position_count'][value["strategy"]] + 1
         elif value["type"] == "sell":
-            current_app.config['open_order_count'] = current_app.config['open_order_count'] - 1
+            current_app.config['open_position_count'][value["strategy"]] = current_app.config['open_position_count'][value["strategy"]] - 1
 
         return jsonify({"message": "Alerte supprimé"}), 200

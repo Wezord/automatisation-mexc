@@ -12,7 +12,12 @@ def create_app():
     app = Flask(__name__)
 
     app.config['current_alert'] = []
-    app.config['open_position_count'] = 0
+    app.config['open_position_count'] = {
+        "bollinger" : 0,
+        "rsi" : 0,
+        "x3" : 0,
+        "moving" : 0
+    }
 
     # Enregistrer les blueprints
     app.register_blueprint(alert_bp)
