@@ -7,6 +7,7 @@ bollinger_bp = Blueprint('bollinger', __name__)
 def bollinger():
     if request.method == "GET" and request.headers.get("X-Custom-Message") == "get_alert":
         strategies_to_send = [d for d in current_app.config['current_alert'] if d["strategy_order_name"] == "bollinger"]
+        print(current_app.config["open_position_count"]["bollinger"])
         return jsonify({"strategies": strategies_to_send}), 200
     return render_template('bollinger.html', strategies = current_app.config['current_alert'])
 
@@ -30,7 +31,7 @@ def bollinger():
                 if d["strategy_order_name"] == "bollinger" and not (
                     (d["type"] == "buy" and d["actif"].split(".")[0] in open_position)
                     or 
-                    (d["type"] == "sell" and d["actif"].split(".")[0] not in open_position)
+                    (d["type"] == "sell" and d["actif"].split(".")[0] not in open_position))
                 )
             ]
             return jsonify({"strategies": strategies_to_send}), 200

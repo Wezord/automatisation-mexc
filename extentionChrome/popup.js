@@ -145,9 +145,11 @@ async function process_alert(alerte){
       else if (type == 'sell'){
         if (position == "short"){
           await closeTrade(nomActif, false);
+          await attendre(1000);
         }
         else if (position == "long"){
           await closeTrade(nomActif, true);
+          await attendre(1000);
         }
       }
       else if(position == "flat"){
@@ -351,7 +353,7 @@ async function searchCrypto(actif){
   await attendre(500);
   // A changer en fonction de la langue
   click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
-  await attendre(500);
+  await attendre(1000);
   await doitOuvrirRecherche().then((doitOuvrir) => {
     if (doitOuvrir) {
       {}
