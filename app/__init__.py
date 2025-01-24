@@ -12,6 +12,7 @@ def create_app():
     app = Flask(__name__)
 
     app.config['current_alert'] = []
+    app.config['open_position_count'] = 0
 
     # Enregistrer les blueprints
     app.register_blueprint(alert_bp)

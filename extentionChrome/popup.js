@@ -129,35 +129,35 @@ async function process_alert(alerte){
       const valueStopLoss = parseFloat(element.alert_message, 10);
       console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " ");
 
-      delete_alert(element);
       // Achete au long
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(3000);
+        await attendre(2000);
         await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(3000);
+        await attendre(2000);
         await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else if (type == 'sell'){
         if (position == "short"){
-          await closeTrade(nomActif, "short");
+          await closeTrade(nomActif, false);
         }
         else if (position == "long"){
-          await closeTrade(nomActif, "long");
+          await closeTrade(nomActif, true);
         }
       }
       else if(position == "flat"){
-        await closeTrade(nomActif, "long");
-        await attendre(200);
-        await closeTrade(nomActif, "short");
+        await closeTrade(nomActif, true);
+        await attendre(500);
+        await closeTrade(nomActif, false);
       }
       else { 
         console.log("wut?")
       }
       // Supprime l'alerte
+      await delete_alert(element);
       await attendre(500);
     }
   }
@@ -232,21 +232,6 @@ function click_button(class_component, numero_component, option = "") {
   });
 }
 
-function changementURL2(data){
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(
-      { action: "changeURL", data }, // Le message à envoyer
-      (response) => {
-          if (chrome.runtime.lastError) {
-              reject(chrome.runtime.lastError);
-          } else {
-              resolve(response.result);
-          }
-      }
-    );
-  });
-}
-
 function fillButton(class_component, numero_component, value) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
@@ -286,18 +271,18 @@ function fillButton(class_component, numero_component, value) {
 async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0){
   //Clique sur ouvrir
   click_button("#mexc_contract_v_open_position .ant-input", 0);
-  await attendre(200);
+  await attendre(500);
   fillButton("#mexc_contract_v_open_position .ant-input", 0, valeur);
   if(stopLoss > 0 || takeProfit>0){
     console.log("SL/TP")
     // Coche la case long Sl
-    await attendre(100);
+    await attendre(500);
     long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);
     await attendre(500);
     if (stopLoss>0){
       // Clique sur la case du stoploss
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1);
-      await attendre(200);
+      await attendre(500);
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1, valueStopLoss);
       await attendre(500);
@@ -306,7 +291,7 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
     if(takeProfit>0){
       // Clique sur la case du takeprofit
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0);
-      await attendre(300);
+      await attendre(500);
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0, takeProfit);
       await attendre(500);
@@ -314,8 +299,9 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
     }
   }
   // Appuie sur open long/shirt
+  await attendre(4000);
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
-  await attendre(300);
+  await attendre(500);
   if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
   console.log("ordre réalisé");
 }
@@ -355,17 +341,17 @@ function doitOuvrirRecherche() {
 
 async function searchCrypto(actif){
   // ResizableWrapper_resizableWrapper__Z_aE5
-  var doitOuvrir;
+  var doitOuvrir=true;
   click_button(".contractDetail_contractNameBox__IcVlT", 0);
   await attendre(500);
   click_button(".Pairs_searchSelect__i_dbG .ant-input", 0);
-  await attendre(100);
+  await attendre(500);
   fillButton(".Pairs_searchSelect__i_dbG .ant-input", 0, actif);
-  await attendre(200);
+  await attendre(500);
   // A changer en fonction de la langue
   click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
   await attendre(500);
-  doitOuvrirRecherche().then((doitOuvrir) => {
+  await doitOuvrirRecherche().then((doitOuvrir) => {
     if (doitOuvrir) {
       {}
     } else {
