@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Blueprint, current_app
+from flask import request, jsonify, Blueprint, current_app
 
 delete_alert_bp = Blueprint('delete_alert', __name__)
 

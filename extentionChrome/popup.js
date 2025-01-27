@@ -3,9 +3,10 @@ const dicStrats = {
   "x3" : 1,
   "rsi": 2,
   "bollinger" : 3,
-  "moving" : 4
+  "moving" : 4,
+  "rsi_storj" : 5
 };
-const ngrokURL = "https://idrfrance.ngrok.app"
+const ngrokURL = "https://ac8a-79-127-169-50.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -22,33 +23,60 @@ async function infiniteTrade(strat_to_use = "alert") {
   
   while(!(false)==true){
     if(Object.keys(strategies).length > 0){
-    console.log("process data");
-    await process_alert(strategies);
-    strategies = [];
-  }
-  else {
-    console.log("get new data");
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Custom-Message": "get_alert"
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`);
+      console.log("process data");
+      await process_alert(strategies);
+      /// CHECK IF DOUBLON
+      const data = {
+        action : "checkDoublon",
+        strategy : selectStrat,
+        quantite : selectQuantite
       }
-      const data = await response.json();
-      console.log("Réponse :", data);
-      // Envoie le json des stratégies à process 
-      strategies = data;
-      timeCoeff = data["time_coeff"]
-    } 
-    catch (error) {
-      console.error("Erreur :", error);
+      try {
+        const response = await fetch(ngrokURL + "/check_doublon", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        const datas = await response.json();
+        console.log("Réponse :", datas);
+        strategies = datas
+      } 
+      catch (error) {
+        console.error("Erreur :", error);
+      }
+      console.log("process data");
+      await process_alert(strategies);
+      strategies = []
     }
-    await attendre(3000);}
+    else {
+      console.log("get new data");
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Message": "get_alert"
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Réponse :", data);
+        // Envoie le json des stratégies à process 
+        strategies = data;
+        timeCoeff = data["time_coeff"]
+      } 
+      catch (error) {
+        console.error("Erreur :", error);
+      }
+    await attendre(3000);
+    }
   }
 }
 
@@ -65,6 +93,7 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
   const selectedKey = selectElement.value;
   selectStrat = selectedKey;
   selectQuantite = inputElement.value;
+  timeAdjustableCoeff = timeElement.value;
 
   // Trouver la valeur correspondante dans le dictionnaire
   const value = dicStrats[selectedKey];
@@ -85,6 +114,7 @@ const selectElement = document.getElementById("choixStrategies");
 const resultElement = document.getElementById("choixStratResult");
 const formElement = document.getElementById("strategiesForm");
 const inputElement = document.getElementById("inputQuantite");
+const timeElement = document.getElementById("timeCoeff");
 
 // Remplir la liste déroulante avec les clés du dictionnaire
 function populateSelectOptions() {

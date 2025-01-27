@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, Blueprint, current_app
+from flask import request, jsonify, Blueprint, current_app
 
 alert_bp = Blueprint('alert', __name__)
 

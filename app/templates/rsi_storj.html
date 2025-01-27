@@ -59,7 +59,7 @@
     </style>
 </head>
 <body>
-    <h1>Alerte RSI</h1>
+    <h1>Alerte X3</h1>
     <table id="strategiesTable">
         <thead>
             <tr>
@@ -81,7 +81,7 @@
     <button id="deleteAll" class="delete-btn" onclick="deleteAll()">Supprimer tout</button>
 
     <script>
-        const strategy_name = "rsi_indiv";
+        const strategy_name = "rsi_storj";
         // Fonction pour supprimer une ligne
         // Fonction pour supprimer une ligne
         function deleteRow(button) {
@@ -104,7 +104,7 @@
                 },
                 body: JSON.stringify({
                     action: "delete", // Données spécifiques de la ligne
-                    alerte: {'strategy_order_name': strategy_name, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' : position, 'stop_loss': "1", 'time':time}
+                    alerte: {'strategy_order_name': strategy_name, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' : position, 'stop_loss': "0", 'time':time}
                 })
             })
             .then(response => {
