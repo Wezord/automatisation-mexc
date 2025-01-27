@@ -10,6 +10,8 @@ const ngrokURL = "https://idrfrance.ngrok.app"
 var varStratSelect;
 var selectStrat;
 var selectQuantite;
+var timeCoeff;
+var timeAdjustableCoeff;
 
 var countOpenOrder;
 
@@ -41,6 +43,7 @@ async function infiniteTrade(strat_to_use = "alert") {
       console.log("Réponse :", data);
       // Envoie le json des stratégies à process 
       strategies = data;
+      timeCoeff = data["time_coeff"]
     } 
     catch (error) {
       console.error("Erreur :", error);
@@ -134,24 +137,24 @@ async function process_alert(alerte){
       // Achete au long
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(2000);
+        await attendre(2000/7*timeCoeff*timeAdjustableCoeff);
         await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(2000);
+        await attendre(2000/7*timeCoeff*timeAdjustableCoeff);
         await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else if (type == 'sell'){
         if (position == "short"){
           await attendre(500);
           await closeTrade(nomActif, false);
-          await attendre(1000);
+          await attendre(1000/7*timeCoeff*timeAdjustableCoeff);
         }
         else if (position == "long"){
           await attendre(500);
           await closeTrade(nomActif, true);
-          await attendre(1000);
+          await attendre(1000/7*timeCoeff*timeAdjustableCoeff);
         }
       }
       else if(position == "flat"){
@@ -304,7 +307,7 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
     }
   }
   // Appuie sur open long/shirt
-  await attendre(4000);
+  await attendre(4000/7*timeCoeff*timeAdjustableCoeff);
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   await attendre(500);
   if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
