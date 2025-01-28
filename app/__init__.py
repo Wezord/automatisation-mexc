@@ -1,4 +1,5 @@
 from flask import Flask
+import mexc_api as mapi
 from app.routes.home import home_bp
 from app.routes.strategy.bollinger import bollinger_bp
 from app.routes.strategy.rsi import rsi_bp
@@ -19,13 +20,14 @@ def create_app():
         {'strategy_order_name': 'rsi_storj', 'actif': 'AGLDUSDT.P', 'alert_message': 'Entry long', 'type': 'buy', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'},
         {'strategy_order_name': 'rsi_storj', 'actif': 'GALAUSDT.P', 'alert_message': 'Entry long', 'type': 'buy', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'},
         {'strategy_order_name': 'rsi_storj', 'actif': 'GALAUSDT.P', 'alert_message': 'Entry long', 'type': 'buy', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'},
+        {'strategy_order_name': 'rsi_storj', 'actif': 'DOGEUSDT.P', 'alert_message': 'Exit long', 'type': 'sell', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'}
     ]
     app.config['open_position_count'] = {
-        "bollinger" : 0,
-        "rsi" : 0,
-        "x3" : 0,
-        "moving" : 0,
-        "rsi_storj" : 0
+        "bollinger" : len(mapi.get_all_open_position("bollinger")),
+        "rsi" : len(mapi.get_all_open_position("rsi")),
+        "x3" : len(mapi.get_all_open_position("x3")),
+        "moving" : len(mapi.get_all_open_position("moving")),
+        "rsi_storj" : len(mapi.get_all_open_position("rsi_storj"))
     }
 
     # Enregistrer les blueprints

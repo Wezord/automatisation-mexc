@@ -20,19 +20,17 @@ def get_all_open_position(strategy):
     futures_client = futures.HTTP(api_key = api_dic[strategy]["api_key"], api_secret = api_dic[strategy]["api_secret"])
     for actif in futures_client.open_positions()["data"]:
         actif_open.append(actif["symbol"].split("_USDT")[0] + "USDT." + str(actif["positionType"]))
-        positionValue = str(actif["holdVol"]*futures_client.index_price(actif["symbol"])["data"]["indexPrice"])
-        print(positionValue)
-    print(actif_open)
     return actif_open
 
 def checkDoublon(strategy, quantite):
     futures_client = futures.HTTP(api_key = api_dic[strategy]["api_key"], api_secret = api_dic[strategy]["api_secret"])
     doublon = []
     for actif in futures_client.open_positions()["data"]:
-        positionValue = str(actif["holdVol"]*futures_client.index_price(actif["symbol"])["data"]["indexPrice"])
+        positionValue = str(actif["leverage"]*actif["oim"])
+        print(actif["symbol"], positionValue)
         if float(positionValue) > quantite*1.20:
             doublon.append(actif["symbol"].split("_USDT")[0] + "USDT." + str(actif["positionType"]))
-        print(doublon)
+    print(doublon)
     return doublon
 
 

@@ -6,7 +6,7 @@ const dicStrats = {
   "moving" : 4,
   "rsi_storj" : 5
 };
-const ngrokURL = "https://ac8a-79-127-169-50.ngrok-free.app"
+const ngrokURL = "https://12e5-79-127-134-24.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -22,10 +22,12 @@ async function infiniteTrade(strat_to_use = "alert") {
   console.log(strategies);
   
   while(!(false)==true){
-    if(Object.keys(strategies).length > 0){
+    console.log(strategies, Object.keys(strategies).length);
+    if(Object.keys(strategies).length > 1){
       console.log("process data");
       await process_alert(strategies);
       /// CHECK IF DOUBLON
+      await attendre(500);
       const data = {
         action : "checkDoublon",
         strategy : selectStrat,
@@ -75,14 +77,14 @@ async function infiniteTrade(strat_to_use = "alert") {
       catch (error) {
         console.error("Erreur :", error);
       }
-    await attendre(3000);
+    await attendre(20000);
     }
   }
 }
 
 
 // Clique sur démarrer le Bot
-let strategies = [];
+var strategies = [];
 document.getElementById("sendRequest").addEventListener("click", async () => {
   
   click_button(".quickTrading_closeIcon__pRcJ5",0);
@@ -167,24 +169,24 @@ async function process_alert(alerte){
       // Achete au long
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(2000/7*timeCoeff*timeAdjustableCoeff);
+        await attendre(2000/7*((1+timeCoeff)*timeAdjustableCoeff));
         await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(2000/7*timeCoeff*timeAdjustableCoeff);
+        await attendre(2000/7*((1+timeCoeff)*timeAdjustableCoeff));
         await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else if (type == 'sell'){
         if (position == "short"){
           await attendre(500);
           await closeTrade(nomActif, false);
-          await attendre(1000/7*timeCoeff*timeAdjustableCoeff);
+          await attendre(1000/7*((1+timeCoeff)*timeAdjustableCoeff));
         }
         else if (position == "long"){
           await attendre(500);
           await closeTrade(nomActif, true);
-          await attendre(1000/7*timeCoeff*timeAdjustableCoeff);
+          await attendre(1000/7*((1+timeCoeff)*timeAdjustableCoeff));
         }
       }
       else if(position == "flat"){
@@ -196,7 +198,7 @@ async function process_alert(alerte){
         console.log("wut?")
       }
       // Supprime l'alerte
-      await attendre(500);
+      await attendre(500*((1+timeCoeff)*timeAdjustableCoeff));
     }
   }
   else {
@@ -309,30 +311,30 @@ function fillButton(class_component, numero_component, value) {
 async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0){
   //Clique sur ouvrir
   click_button("#mexc_contract_v_open_position .ant-input", 0);
-  await attendre(500);
+  await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
   fillButton("#mexc_contract_v_open_position .ant-input", 0, valeur);
   if(stopLoss > 0 || takeProfit>0){
     console.log("SL/TP")
     // Coche la case long Sl
-    await attendre(500);
+    await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
     long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);
-    await attendre(500);
+    await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
     if (stopLoss>0){
       // Clique sur la case du stoploss
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1);
-      await attendre(500);
+      await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1, valueStopLoss);
-      await attendre(500);
+      await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
       console.log("achat");
     }
     if(takeProfit>0){
       // Clique sur la case du takeprofit
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0);
-      await attendre(500);
+      await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0, takeProfit);
-      await attendre(500);
+      await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
       console.log("achat");
     }
   }

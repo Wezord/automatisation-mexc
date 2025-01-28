@@ -21,7 +21,7 @@ def rsi_storj():
             strategies_to_send = []
             for d in current_app.config['current_alert']:
                 if d["strategy_order_name"] == "rsi_storj":
-
+                    print("attention : ", (d["actif"].split(".")[0] + ".2") , open_position)
                     if  not (
                         (d["type"] == "buy" and  d["position"] == "long" and (d["actif"].split(".")[0] + ".2") in open_position)
                         or 
