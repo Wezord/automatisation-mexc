@@ -198,7 +198,7 @@ async function process_alert(alerte){
         console.log("wut?")
       }
       // Supprime l'alerte
-      await attendre(500*((1+timeCoeff)*timeAdjustableCoeff));
+      await attendre(500);
     }
   }
   else {
@@ -311,35 +311,35 @@ function fillButton(class_component, numero_component, value) {
 async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0){
   //Clique sur ouvrir
   click_button("#mexc_contract_v_open_position .ant-input", 0);
-  await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
+  await attendre(500);
   fillButton("#mexc_contract_v_open_position .ant-input", 0, valeur);
   if(stopLoss > 0 || takeProfit>0){
     console.log("SL/TP")
     // Coche la case long Sl
-    await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
+    await attendre(500);
     long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);
-    await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
+    await attendre(500);
     if (stopLoss>0){
       // Clique sur la case du stoploss
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1);
-      await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
+      await attendre(500);
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1, valueStopLoss);
-      await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
+      await attendre(500);
       console.log("achat");
     }
     if(takeProfit>0){
       // Clique sur la case du takeprofit
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0);
-      await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
+      await attendre(500);
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0, takeProfit);
-      await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
+      await attendre(500);
       console.log("achat");
     }
   }
   // Appuie sur open long/shirt
-  await attendre(4000/7*timeCoeff*timeAdjustableCoeff);
+  await attendre(2000/7*((1+timeCoeff)*timeAdjustableCoeff));
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   await attendre(500);
   if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
