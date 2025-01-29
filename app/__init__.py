@@ -1,6 +1,7 @@
 from flask import Flask
 import mexc_api as mapi
 from app.routes.home import home_bp
+from app.routes.strategy.strat import strat_bp
 from app.routes.strategy.bollinger import bollinger_bp
 from app.routes.strategy.rsi import rsi_bp
 from app.routes.strategy.moving import moving_bp
@@ -30,8 +31,16 @@ def create_app():
         "rsi_storj" : len(mapi.get_all_open_position("rsi_storj"))
     }
 
+    app.config["list_strategy"] = [
+        "bollinger" ,"bollinger_knc", "bollinger_ens", "bollinger_op", 
+        "moving", "moving_ens", "moving_chz", "moving_xrp",
+        "rsi", "rsi_storj", "rsi_atom", "rsi_dyd",
+        "x3", "x3_gala", "x3_luna", "x3_uni"
+    ]
+
     # Enregistrer les blueprints
     app.register_blueprint(alert_bp)
+    app.register_blueprint(strat_bp)
     app.register_blueprint(delete_alert_bp)
     app.register_blueprint(webhook_bp)
     app.register_blueprint(check_doublon_bp)

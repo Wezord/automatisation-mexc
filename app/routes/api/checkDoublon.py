@@ -10,7 +10,7 @@ def check_doublon():
         print(data)
         doublon = mapi.checkDoublon(data.get("strategy"), int(data.get("quantite")))
         strategies_to_send = [
-            {'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "2" else "short" ,'alert_message': 'Force Exit', 'actif': actif.split(".")[0], 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'} 
+            {'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "2" else "short" ,'alert_message': 'Force Exit', 'actif': actif.split(".")[0] if actif.split(".")[0] != "LUNANEWUSDT.P" else "LUNAUSDT" , 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'} 
             for actif in doublon
         ]
         return jsonify({"strategies": strategies_to_send}), 200

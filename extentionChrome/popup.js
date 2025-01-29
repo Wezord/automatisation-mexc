@@ -17,8 +17,6 @@ var timeAdjustableCoeff;
 var countOpenOrder;
 
 async function infiniteTrade(strat_to_use = "alert") {
-  const strat = strat_to_use;
-  const url = ngrokURL + "/" + strat;
   console.log(strategies);
   
   while(!(false)==true){
@@ -58,11 +56,11 @@ async function infiniteTrade(strat_to_use = "alert") {
     else {
       console.log("get new data");
       try {
-        const response = await fetch(url, {
+        const response = await fetch(ngrokURL + "/strat", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "X-Custom-Message": "get_alert"
+            "X-Custom-Message": strat_to_use + ".get_alert"
           },
         });
         if (!response.ok) {
