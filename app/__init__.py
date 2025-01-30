@@ -15,14 +15,8 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    app.config['current_alert'] = [
-        {'strategy_order_name': 'rsi_storj', 'actif': 'AGLDUSDT.P', 'alert_message': 'Entry long', 'type': 'buy', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'},
-        {'strategy_order_name': 'rsi_storj', 'actif': 'AGLDUSDT.P', 'alert_message': 'Exit long', 'type': 'sell', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'},
-        {'strategy_order_name': 'rsi_storj', 'actif': 'AGLDUSDT.P', 'alert_message': 'Entry short', 'type': 'buy', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'},
-        {'strategy_order_name': 'rsi_storj', 'actif': 'AGLDUSDT.P', 'alert_message': 'Exit short', 'type': 'sell', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'},
-        {'strategy_order_name': 'rsi_storj', 'actif': 'AGLDUSDT.P', 'alert_message': 'Entry long', 'type': 'buy', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'},
-        {'strategy_order_name': 'rsi_storj', 'actif': 'AGLDUSDT.P', 'alert_message': 'Entry long', 'type': 'buy', 'position': 'long', 'stop_loss': '0', 'time': '2025-01-27T18:50:10Z'}
-    ]
+    app.config['current_alert'] = []
+    
     app.config['open_position_count'] = {
         "bollinger" : len(mapi.get_all_open_position("bollinger")),
         "rsi" : len(mapi.get_all_open_position("rsi")),
