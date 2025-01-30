@@ -1,11 +1,8 @@
 // Variables
-const dicStrats = {
-  "x3" : 1, "x3_gala" : 1.1, "x3_luna" : 1.2, "x3_uni" : 1.3,
-  "rsi": 2, "rsi_storj" : 2.1, "rsi_atom" : 2.2, "rsi_dyd" : 2.3,
-  "bollinger" : 3, "bollinger_knc" : 3.1, "bollinger_ens" : 3.2, "bollinger_op" : 3.3,
-  "moving" : 4, "moving_xrp" : 4.1, "moving_ens" : 4.2, "moving_chz" : 4.3,
+var dicStrats = {
 };
-const ngrokURL = "https://idrfrance.ngrok.app"
+
+const ngrokURL = "https://986e-146-70-194-51.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -114,14 +111,6 @@ const inputElement = document.getElementById("inputQuantite");
 const timeElement = document.getElementById("timeCoeff");
 
 // Remplir la liste déroulante avec les clés du dictionnaire
-function populateSelectOptions() {
-  for (const key in dicStrats) {
-    const option = document.createElement("option");
-    option.value = key; // La valeur de l'option sera la clé
-    option.textContent = key; // Le texte affiché sera la clé
-    selectElement.appendChild(option);
-  }
-}
 
 function demandeChangementUtilisateur(data) {
   return new Promise((resolve, reject) => {
@@ -138,7 +127,32 @@ function demandeChangementUtilisateur(data) {
   });
 }
 
-// Initialiser la liste déroulante
+async function populateSelectOptions() {
+  try {
+    const response = await fetch(ngrokURL + "/config", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    const data = await response.json();
+    console.log("Réponse :", data);
+    // Envoie le json des stratégies à process
+    dicStrats = data["strategies"];
+  } 
+  catch (error) {
+    console.error("Erreur :", error);
+  }
+  for (strat in dicStrats) {
+    const option = document.createElement("option");
+    option.value = dicStrats[strat]; // La valeur de l'option sera la clé
+    option.textContent = dicStrats[strat]; // Le texte affiché sera la clé
+    selectElement.appendChild(option);
+  }
+}
 populateSelectOptions();
 
 /////////////////////////////////////////////////////////////////
