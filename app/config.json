@@ -1,6 +1,7 @@
 {
     "strategy": [
         {"value": "rsi", "label": "rsi"},
+        {"value": "rsi_storj", "label": "rsi_storj"},
         {"value": "x3", "label": "x3"},
         {"value": "bollinger", "label": "bollinger"},
         {"value": "moving", "label": "moving"}

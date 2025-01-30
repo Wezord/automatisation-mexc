@@ -6,7 +6,7 @@ const dicStrats = {
   "moving" : 4,
   "rsi_storj" : 5
 };
-const ngrokURL = "https://12e5-79-127-134-24.ngrok-free.app"
+const ngrokURL = "https://986e-146-70-194-51.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -56,11 +56,10 @@ async function infiniteTrade(strat_to_use = "alert") {
     else {
       console.log("get new data");
       try {
-        const response = await fetch(ngrokURL + "/strat", {
+        const response = await fetch(ngrokURL + "/get_alert?strategy=" + strat_to_use, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "X-Custom-Message": strat_to_use + ".get_alert"
           },
         });
         if (!response.ok) {
@@ -79,7 +78,6 @@ async function infiniteTrade(strat_to_use = "alert") {
     }
   }
 }
-
 
 // Clique sur démarrer le Bot
 var strategies = [];

@@ -1,94 +1,217 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste déroulante et variable</title>
+    <title>Tableau des Stratégies</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
+            margin: 20px;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 300px;
+            background-color: #f4f4f9;
         }
 
         h1 {
-            font-size: 24px;
+            text-align: center;
             color: #333;
-            margin-bottom: 20px;
         }
 
-        select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
             border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            background-color: #fafafa;
         }
 
-        p {
-            font-size: 18px;
-            color: #333;
-        }
-
-        #valeurVariable {
-            font-weight: bold;
-            color: #007BFF;
+        .delete-btn:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Choisissez une option</h1>
+    <h1>Alerte</h1>
+    <table id="strategiesTable">
+        <thead>
+            <tr>
+                <th>Actif</th>
+                <th>Type (Long/Short)</th>
+                <th>Entry/Exit</th>
+                <th>StopLoss</th>
+                <th>Heure</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            
+            </tr>
+        </tbody>
+    </table>
 
-        <select id="monSelect" onchange="mettreAJourVariable()">
-            <option value="rsi">rsi</option>
-        </select>
-
-        <p>Variable actuelle : <span id="valeurVariable">aucune</span></p>
-    </div>
+    <button id="deleteAll" class="delete-btn" onclick="deleteAll()">Supprimer tout</button>
 
     <script>
-        // Fonction pour charger le fichier JSON contenant les options
-        function chargerOptions() {
-            fetch('/app/config.json')
-                .then(response => response.json())
-                .then(data => {
-                    const select = document.getElementById('monSelect');
-                    data.options.forEach(option => {
-                        const optionElement = document.createElement('option');
-                        optionElement.value = option.value;
-                        optionElement.textContent = option.label;
-                        select.appendChild(optionElement);
-                    });
+        var urlParams = new URLSearchParams(window.location.search);
+        const strategy_name = urlParams.get('strategy');
+
+        console.log(strategy_name);
+
+        // Fonction pour supprimer une ligne
+        function deleteRow(button) {
+            // Trouve la ligne parente du bouton cliqué
+            const strategy_order_name = strategy_name;
+            const actif = row.cells[0].textContent;  // Exemple : colonne Actif
+            const type = row.cells[2].textContent;  // Exemple : colonne Type (Long/Short)
+            const time = row.cells[4].textContent;
+            const position = row.cells[1];
+            const alert_message = row.cells[3].textContent;
+
+            // Supprime la ligne du tableau
+            row.remove();
+
+            // Envoie une requête POST au serveur pour notifier la suppression
+            fetch('/delete_alert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: "delete", // Données spécifiques de la ligne
+                    alerte: {'strategy_order_name': strategy_name, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' : position, 'stop_loss': "1", 'time':time}
                 })
-                .catch(error => console.error('Erreur lors du chargement du fichier JSON:', error));
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Ligne supprimée et serveur notifié.');
+                } else {
+                    console.error('Erreur lors de la notification au serveur.', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur réseau lors de la notification au serveur :', error);
+            });
         }
 
-        function mettreAJourVariable() {
-            const select = document.getElementById('monSelect');
-            // Afficher la nouvelle valeur de la variable
-            document.getElementById('valeurVariable').innerText = select.value;
-            window.location.href=select.value;
+        function deleteAll(){
+            const tbody = document.getElementById('strategiesTable').getElementsByTagName('tbody')[0];
+    
+            // Vérifie si tbody existe avant de continuer
+            if (tbody) {
+                // Vide toutes les lignes du tableau
+                tbody.innerHTML = '';
+                fetch('/delete_alert', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: "delete_all", // Données spécifiques de la ligne
+                        alerte: strategy_name
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Ligne supprimée et serveur notifié.');
+                    } else {
+                        console.error('Erreur lors de la notification au serveur.', response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur réseau lors de la notification au serveur :', error);
+                });
+                console.log('Toutes les lignes ont été supprimées.');
+            } else {
+                console.error('Erreur : le tableau ou le tbody est introuvable.');
+            }
         }
 
-        // Charger les options dès que la page est prête
-        window.onload = chargerOptions;
+        // Fonction pour mettre à jour le tableau avec les stratégies
+        document.addEventListener('DOMContentLoaded', function() {
+            // Placez votre code JavaScript ici
+            function updateTable(strategies) {
+                var table = document.getElementById('strategiesTable');
+                var tbody = table ? table.getElementsByTagName('tbody')[0] : null;  // Vérifie si 'table' existe
+                if(!table) console.log("Pas de table");
+                if (!tbody) {
+                    console.error('Erreur : l\'élément tbody n\'a pas été trouvé.');
+                    return;
+                }
+
+                // Vider le tableau existant
+                tbody.innerHTML = '';
+
+                // Ajouter une ligne pour chaque stratégie dans la liste
+                strategies.forEach(function(strategy) {
+                    if(strategy.strategy_order_name == strategy_name) {
+                        var row = tbody.insertRow();
+
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
+                        var cell4 = row.insertCell(3);
+                        var cell5 = row.insertCell(4);
+                        var cell6 = row.insertCell(5);
+
+                        cell1.textContent = strategy.actif;
+                        cell2.textContent = strategy.position;
+                        cell3.textContent = strategy.type;
+                        cell4.textContent = strategy.alert_message;
+                        cell5.textContent = strategy.time;
+                        cell6.innerHTML = '<button class="delete-btn" onclick="deleteRow(this)">Supprimer</button>';
+                    }
+                });
+            }
+        
+
+            // Fonction de polling pour récupérer les stratégies du serveur toutes les 5 secondes
+            function fetchStrategies() {
+                fetch('/get_alert?strategy='+strategy_name)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.strategies) {
+                            updateTable(data.strategies);
+                            console.log("Strategie" , data.strategies);
+                        }
+                    })
+                    .catch(error => {
+                console.error("Erreur lors de la récupération des données : ", error);
+            });
+            }
+
+            // Démarrer le polling dès que la page est chargée
+            setInterval(fetchStrategies, 5000); // Toutes les 5 secondes
+        });
     </script>
 </body>
 </html>

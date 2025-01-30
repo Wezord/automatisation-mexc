@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste déroulante et variable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #fafafa;
+        }
+
+        p {
+            font-size: 18px;
+            color: #333;
+        }
+
+        #valeurVariable {
+            font-weight: bold;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Choisissez une option</h1>
+
+        <select id="monSelect" onchange="mettreAJourVariable()"></select>
+
+        <p>Variable actuelle : <span id="valeurVariable">aucune</span></p>
+    </div>
+
+    <script>
+        // Fonction pour charger le fichier JSON contenant les options
+        function chargerOptions() {
+            fetch('config')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    const select = document.getElementById('monSelect');
+                    data["strategies"].forEach(option => {
+                        const optionElement = document.createElement('option');
+                        console.log(option)
+                        optionElement.value = option;
+                        optionElement.textContent = option;
+                        select.appendChild(optionElement);
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement du fichier JSON:', error));
+        }
+
+        function mettreAJourVariable() {
+            const select = document.getElementById('monSelect');
+            // Afficher la nouvelle valeur de la variable
+            document.getElementById('valeurVariable').innerText = select.value;
+            window.location.href="/strat?strategy="+select.value;
+        }
+
+        // Charger les options dès que la page est prête
+        window.onload = chargerOptions;
+    </script>
+</body>
+</html>
