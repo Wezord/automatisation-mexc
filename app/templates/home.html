@@ -50,6 +50,31 @@
             font-weight: bold;
             color: #007BFF;
         }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #fafafa;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -59,6 +84,11 @@
         <select id="monSelect" onchange="mettreAJourVariable()"></select>
 
         <p>Variable actuelle : <span id="valeurVariable">aucune</span></p>
+
+        <h2>Ajouter/Supprimer une nouvelle stratégie</h2>
+        <input type="text" id="nouvelleStrategie" placeholder="Entrez une nouvelle stratégie">
+        <button onclick="ajouterNouvelleStrategie()">Ajouter</button>
+        <button onclick="delStrategy()">Supprimer</button>
     </div>
 
     <script>
@@ -85,6 +115,44 @@
             // Afficher la nouvelle valeur de la variable
             document.getElementById('valeurVariable').innerText = select.value;
             window.location.href="/strat?strategy="+select.value;
+        }
+
+        function ajouterNouvelleStrategie() {
+            const nouvelleStrategie = document.getElementById('nouvelleStrategie').value;
+
+            if (nouvelleStrategie.trim() === '') {
+                alert('Veuillez entrer une stratégie valide.');
+                return;
+            }
+
+            // Envoi de la nouvelle stratégie au serveur pour l'ajouter au fichier JSON
+            fetch('/add_strategy?strategy=' + nouvelleStrategie, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .catch(error => console.error('Erreur lors de l\'ajout de la stratégie:', error));
+        }
+
+        function delStrategy() {
+            const nouvelleStrategie = document.getElementById('nouvelleStrategie').value;
+
+            if (nouvelleStrategie.trim() === '') {
+                alert('Veuillez entrer une stratégie valide.');
+                return;
+            }
+
+            // Envoi de la nouvelle stratégie au serveur pour l'ajouter au fichier JSON
+            fetch('/del_strategy?strategy=' + nouvelleStrategie, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .catch(error => console.error('Erreur lors de l\'ajout de la stratégie:', error));
         }
 
         // Charger les options dès que la page est prête

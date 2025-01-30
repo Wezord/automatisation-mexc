@@ -1,20 +1,68 @@
 {
     "strategy": [
-        {"value": "rsi", "label": "rsi"},
-        {"value": "rsi_storj", "label": "rsi_storj"},
-        {"value": "rsi_atom", "label": "rsi_atom"},
-        {"value": "rsi_dyd", "label": "rsi_dyd"},
-        {"value": "x3", "label": "x3"},
-        {"value": "x3_gala", "label": "x3_gala"},
-        {"value": "x3_luna", "label": "x3_luna"},
-        {"value": "x3_uni", "label": "x3_uni"},
-        {"value": "bollinger", "label": "bollinger"},
-        {"value": "bollinger_knc", "label": "bollinger_knc"},
-        {"value": "bollinger_ens", "label": "bollinger_ens"},
-        {"value": "bollinger_op", "label": "bollinger_op"},
-        {"value": "moving", "label": "moving"},
-        {"value": "moving_ens", "label": "moving_ens"},
-        {"value": "moving_xrp", "label": "moving_xrp"},
-        {"value": "moving_chz", "label": "moving_chz"}
+        {
+            "value": "rsi",
+            "label": "rsi"
+        },
+        {
+            "value": "rsi_storj",
+            "label": "rsi_storj"
+        },
+        {
+            "value": "rsi_atom",
+            "label": "rsi_atom"
+        },
+        {
+            "value": "rsi_dyd",
+            "label": "rsi_dyd"
+        },
+        {
+            "value": "x3",
+            "label": "x3"
+        },
+        {
+            "value": "x3_gala",
+            "label": "x3_gala"
+        },
+        {
+            "value": "x3_luna",
+            "label": "x3_luna"
+        },
+        {
+            "value": "x3_uni",
+            "label": "x3_uni"
+        },
+        {
+            "value": "bollinger",
+            "label": "bollinger"
+        },
+        {
+            "value": "bollinger_knc",
+            "label": "bollinger_knc"
+        },
+        {
+            "value": "bollinger_ens",
+            "label": "bollinger_ens"
+        },
+        {
+            "value": "bollinger_op",
+            "label": "bollinger_op"
+        },
+        {
+            "value": "moving_ens",
+            "label": "moving_ens"
+        },
+        {
+            "value": "moving_xrp",
+            "label": "moving_xrp"
+        },
+        {
+            "value": "moving_chz",
+            "label": "moving_chz"
+        },
+        {
+            "value": "moving",
+            "label": "moving"
+        }
     ]
 }

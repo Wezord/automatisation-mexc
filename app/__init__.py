@@ -8,6 +8,8 @@ from app.routes.api.delete_alert import delete_alert_bp
 from app.routes.api.config import config_bp
 from app.routes.api.webhook import webhook_bp
 from app.routes.api.checkDoublon import check_doublon_bp
+from app.routes.api.manageStrategy import add_strategy_bp
+from app.routes.api.manageStrategy import del_strategy_bp
 import json
 import os
 
@@ -16,7 +18,7 @@ def create_app():
     app = Flask(__name__)
 
     app.config['current_alert'] = []
-    
+
     app.config['open_position_count'] = {
         "bollinger" : len(mapi.get_all_open_position("bollinger")),
         "rsi" : len(mapi.get_all_open_position("rsi")),
@@ -50,5 +52,7 @@ def create_app():
     app.register_blueprint(check_doublon_bp)
     app.register_blueprint(home_bp)
     app.register_blueprint(rsi_storj_bp)
+    app.register_blueprint(add_strategy_bp)
+    app.register_blueprint(del_strategy_bp)
 
     return app
