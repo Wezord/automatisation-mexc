@@ -1,12 +1,11 @@
 // Variables
 const dicStrats = {
-  "x3" : 1,
-  "rsi": 2,
-  "bollinger" : 3,
-  "moving" : 4,
-  "rsi_storj" : 5
+  "x3" : 1, "x3_gala" : 1.1, "x3_luna" : 1.2, "x3_uni" : 1.3,
+  "rsi": 2, "rsi_storj" : 2.1, "rsi_atom" : 2.2, "rsi_dyd" : 2.3,
+  "bollinger" : 3, "bollinger_knc" : 3.1, "bollinger_ens" : 3.2, "bollinger_op" : 3.3,
+  "moving" : 4, "moving_xrp" : 4.1, "moving_ens" : 4.2, "moving_chz" : 4.3,
 };
-const ngrokURL = "https://986e-146-70-194-51.ngrok-free.app"
+const ngrokURL = "https://idrfrance.ngrok.app"
 
 var varStratSelect;
 var selectStrat;
@@ -152,7 +151,6 @@ async function process_alert(alerte){
     // Parcours les alertes
     for (const element of alerte["strategies"]) {
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
-      // const nomActif = element["actif"].split("USDT")[0];
       const nomActif = element["actif"].split(".")[0];
       const position = element.position;
       const type = element.type;
