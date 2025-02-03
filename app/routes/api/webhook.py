@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Blueprint, current_app
+from flask import request, jsonify, Blueprint, current_app
 
 webhook_bp = Blueprint('webhook', __name__)
 

@@ -6,7 +6,7 @@ api_dic = {
     "bollinger_op" : {"api_key" : "mx0vglWvt05gtwICTa" , "api_secret" : "6abba558a2dc4f02ba7ee853934a3f09"},
     "bollinger_knc" : {"api_key" : "mx0vgll3KI0DzvNQSZ" , "api_secret" : "adbe8010219c41a0a9cbd28077b56813"},
     "moving" : {"api_key" : "mx0vglTJinDmmpVhD5" , "api_secret" : "da040ad343294cb98d49dfba5306f179"},
-    "moving_ens" : {"api_key" : "mx0vglwMFY4kgDTuy" , "api_secret" : "918befe9dc584aacb3f6e01742357c19"},
+    "moving_ens" : {"api_key" : "mx0vglwMFY4kgDTuyj" , "api_secret" : "918befe9dc584aacb3f6e01742357c19"},
     "moving_xrp" : {"api_key" : "mx0vglpL3yNZmZP9Yb" , "api_secret" : "ccb1aed5c03c433a9ddff58de8dd29fe"},
     "moving_chz" : {"api_key" : "mx0vglpKA29hK3V3fF" , "api_secret" : "66b33720918d4ebaa6fe4933dc46f99e"},
     "x3" : {"api_key" : "mx0vglbsiyENvYy5FA" , "api_secret" : "5be4ae5309d54d61a58354cd653d8dc4"},
@@ -38,6 +38,7 @@ def checkDoublon(strategy, quantite):
         positionValue = str(actif["leverage"]*actif["oim"])
         if float(positionValue) > quantite*1.20:
             doublon.append(actif["symbol"].split("_USDT")[0] + "USDT." + str(actif["positionType"]))
+    print(doublon)
     return doublon
 
 

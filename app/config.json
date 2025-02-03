@@ -64,5 +64,11 @@
             "value": "moving",
             "label": "moving"
         }
+    ],
+
+    "apiKey" : [
+        {
+            "bollinger" : "mx0vglfAsfIbEEwTgv"
+        }
     ]
 }

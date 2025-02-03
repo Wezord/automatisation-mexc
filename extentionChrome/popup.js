@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://986e-146-70-194-51.ngrok-free.app"
+const ngrokURL = "https://bd33-79-127-134-58.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -65,7 +65,7 @@ async function infiniteTrade(strat_to_use = "alert") {
         console.log("Réponse :", data);
         // Envoie le json des stratégies à process 
         strategies = data;
-        timeCoeff = data["time_coeff"]
+        timeCoeff = data["time_coeff"];
       } 
       catch (error) {
         console.error("Erreur :", error);
@@ -164,6 +164,8 @@ async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
     // Parcours les alertes
     for (const element of alerte["strategies"]) {
+      timeCoeff = timeCoeff + 1;
+      console.log(timeCoeff);
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
       const nomActif = element["actif"].split(".")[0];
       const position = element.position;
@@ -177,24 +179,24 @@ async function process_alert(alerte){
       // Achete au long
       if(position == "short" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(2000/7*((1+timeCoeff)*timeAdjustableCoeff));
+        await attendre(2000* timeAdjustableCoeff + 4000/70 * timeCoeff);
         await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
         await searchCrypto(nomActif);
-        await attendre(2000/7*((1+timeCoeff)*timeAdjustableCoeff));
+        await attendre(2000* timeAdjustableCoeff + 4000/70 * timeCoeff);
         await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else if (type == 'sell'){
         if (position == "short"){
           await attendre(500);
           await closeTrade(nomActif, false);
-          await attendre(1000/7*((1+timeCoeff)*timeAdjustableCoeff));
+          await attendre(1000* timeAdjustableCoeff + 1000/90 * timeCoeff);
         }
         else if (position == "long"){
           await attendre(500);
           await closeTrade(nomActif, true);
-          await attendre(1000/7*((1+timeCoeff)*timeAdjustableCoeff));
+          await attendre(1000* timeAdjustableCoeff + 1000/90 * timeCoeff);
         }
       }
       else if(position == "flat"){
@@ -347,7 +349,7 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
     }
   }
   // Appuie sur open long/shirt
-  await attendre(2000/7*((1+timeCoeff)*timeAdjustableCoeff));
+  await attendre(1000* timeAdjustableCoeff + 4000/70 * timeCoeff);
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   await attendre(500);
   if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
@@ -391,14 +393,14 @@ async function searchCrypto(actif){
   // ResizableWrapper_resizableWrapper__Z_aE5
   var doitOuvrir=true;
   click_button(".contractDetail_contractNameBox__IcVlT", 0);
-  await attendre(500);
+  await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
   click_button(".Pairs_searchSelect__i_dbG .ant-input", 0);
   await attendre(500);
   fillButton(".Pairs_searchSelect__i_dbG .ant-input", 0, actif);
   await attendre(500);
   // A changer en fonction de la langue
   click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
-  await attendre(1000);
+  await attendre(1000* timeAdjustableCoeff + 1000/7 * timeCoeff);
   await doitOuvrirRecherche().then((doitOuvrir) => {
     if (doitOuvrir) {
       {}
@@ -466,4 +468,20 @@ async function closeTrade(crypto,long){//crypto: les deux ou trois lettre majusc
   });
 }
 
+async function send_error(error){
+  try {
+    const response = await fetch(ngrokURL + "/send_error", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"error" : error})
+    });
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Erreur :", error);
+  }
+}
   

@@ -87,6 +87,8 @@
 
         <h2>Ajouter/Supprimer une nouvelle stratégie</h2>
         <input type="text" id="nouvelleStrategie" placeholder="Entrez une nouvelle stratégie">
+        <input type="text" id="apiKey" placeholder="Entrez son api key">
+        <input type="text" id="secretKey" placeholder="Entrez sa secret key">
         <button onclick="ajouterNouvelleStrategie()">Ajouter</button>
         <button onclick="delStrategy()">Supprimer</button>
     </div>
@@ -119,14 +121,18 @@
 
         function ajouterNouvelleStrategie() {
             const nouvelleStrategie = document.getElementById('nouvelleStrategie').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const secretKey = document.getElementById('secretKey').value;
 
             if (nouvelleStrategie.trim() === '') {
                 alert('Veuillez entrer une stratégie valide.');
                 return;
             }
+            if ((apiKey.trim() === '')) { alert("Entrer une api key valide"); return }
+            if ((secretKey.trim() === '')) { alert("Entrer une secret key valide"); return }
 
             // Envoi de la nouvelle stratégie au serveur pour l'ajouter au fichier JSON
-            fetch('/add_strategy?strategy=' + nouvelleStrategie, {
+            fetch('/add_strategy?strategy=' + nouvelleStrategie + "&apiKey=" + apiKey + "&secretKey=" + secretKey, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

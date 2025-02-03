@@ -17,7 +17,20 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    app.config['current_alert'] = []
+    app.config['current_alert'] = [
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "long",'alert_message': 'Entry long', 'actif': "ARUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "long",'alert_message': 'Entry long', 'actif': "ARUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "short",'alert_message': 'Entry short', 'actif': "BNXUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "short",'alert_message': 'Entry short', 'actif': "BNXUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "long",'alert_message': 'Entry long', 'actif': "XRPUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "long",'alert_message': 'Entry long', 'actif': "XRPUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "short",'alert_message': 'Entry short', 'actif': "RSRUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "short",'alert_message': 'Entry short', 'actif': "RSRUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "long",'alert_message': 'Entry long', 'actif': "SUSHIUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "long",'alert_message': 'Entry long', 'actif': "SUSHIUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "short",'alert_message': 'Entry short', 'actif': "BNXUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+        {'strategy_order_name': "rsi_dyd", 'type': 'buy', 'position': "short",'alert_message': 'Entry short', 'actif': "BNXUSDT.P", 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'},
+    ]
 
     app.config['open_position_count'] = {
         "bollinger" : len(mapi.get_all_open_position("bollinger")),

@@ -9,8 +9,13 @@ def check_doublon():
         data = request.get_json()
         print(data)
         doublon = mapi.checkDoublon(data.get("strategy"), int(data.get("quantite")))
-        strategies_to_send = [
-            {'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "2" else "short" ,'alert_message': 'Force Exit', 'actif': actif.split(".")[0] if actif.split(".")[0] != "LUNANEWUSDT.P" else "LUNAUSDT" , 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'} 
-            for actif in doublon
-        ]
+        strategies_to_send = []
+        for actif in doublon :
+            if actif.split(".")[0] == "BNXNEWUSDT":
+                actif = 'BNXUSDT.P'
+            elif actif.split(".")[0] == "FILECOINUSDT":
+                actif = "FILUSDT.P"
+            elif actif.split(".")[0] == "LUNANEWUSDT":
+                actif = "LUNAUSDT"
+            strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit', 'actif': actif.split(".")[0], 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
         return jsonify({"strategies": strategies_to_send}), 200
