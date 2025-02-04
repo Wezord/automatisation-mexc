@@ -190,12 +190,12 @@ async function process_alert(alerte){
       }
       else if (type == 'sell'){
         if (position == "short"){
-          await attendre(500);
+          await attendre(500* timeAdjustableCoeff + 1000/90 * timeCoeff);
           await closeTrade(nomActif, false);
           await attendre(1000* timeAdjustableCoeff + 1000/90 * timeCoeff);
         }
         else if (position == "long"){
-          await attendre(500);
+          await attendre(500* timeAdjustableCoeff + 1000/90 * timeCoeff);
           await closeTrade(nomActif, true);
           await attendre(1000* timeAdjustableCoeff + 1000/90 * timeCoeff);
         }
@@ -394,7 +394,7 @@ async function searchCrypto(actif){
   // ResizableWrapper_resizableWrapper__Z_aE5
   var doitOuvrir=true;
   click_button(".contractDetail_contractNameBox__IcVlT", 0);
-  await attendre(500/7*((1+timeCoeff)*timeAdjustableCoeff));
+  await attendre(500* timeAdjustableCoeff + 1000/7 * timeCoeff);
   click_button(".Pairs_searchSelect__i_dbG .ant-input", 0);
   await attendre(500);
   fillButton(".Pairs_searchSelect__i_dbG .ant-input", 0, actif);
@@ -441,7 +441,7 @@ async function closeTrade(crypto,long){//crypto: les deux ou trois lettre majusc
           }
           else{
             const matchingElements = Array.from(listElements).filter((element) =>
-              element.textContent.trim().toLowerCase().includes(crypto.toLowerCase()));
+              element.textContent.trim().toLowerCase().split("usdt")[0] === crypto.toLowerCase().split("usdt")[0]);
             const nbMatchingElements=matchingElements.length;
             if (nbMatchingElements==1){
               const bouton=(matchingElements[0].querySelectorAll(`.FastClose_closeBtn__ze4z7`))[0];
