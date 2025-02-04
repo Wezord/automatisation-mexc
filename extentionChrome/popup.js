@@ -179,7 +179,7 @@ async function process_alert(alerte){
       if(position == "short" && type == "buy"){
         timeCoeff = timeCoeff + 1;
         await searchCrypto(nomActif);
-        await attendre(1000* timeAdjustableCoeff + 3000/70 * timeCoeff);
+        await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
         await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
@@ -350,7 +350,7 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
     }
   }
   // Appuie sur open long/shirt
-  await attendre(1000* timeAdjustableCoeff + 4000/70 * timeCoeff);
+  await attendre(1000* timeAdjustableCoeff + 2500/70 * timeCoeff);
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   await attendre(500);
   if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
@@ -394,14 +394,14 @@ async function searchCrypto(actif){
   // ResizableWrapper_resizableWrapper__Z_aE5
   var doitOuvrir=true;
   click_button(".contractDetail_contractNameBox__IcVlT", 0);
-  await attendre(500* timeAdjustableCoeff + 1000/7 * timeCoeff);
+  await attendre(500* timeAdjustableCoeff + 500/7 * timeCoeff);
   click_button(".Pairs_searchSelect__i_dbG .ant-input", 0);
   await attendre(500);
   fillButton(".Pairs_searchSelect__i_dbG .ant-input", 0, actif);
   await attendre(500);
   // A changer en fonction de la langue
   click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
-  await attendre(1000* timeAdjustableCoeff + 1000/7 * timeCoeff);
+  await attendre(1000* timeAdjustableCoeff + 500/7 * timeCoeff);
   await doitOuvrirRecherche().then((doitOuvrir) => {
     if (doitOuvrir) {
       {}
