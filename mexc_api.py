@@ -29,6 +29,7 @@ def get_all_open_position(strategy):
     futures_client = futures.HTTP(api_key = api_dic[strategy]["api_key"], api_secret = api_dic[strategy]["api_secret"])
     for actif in futures_client.open_positions()["data"]:
         actif_open.append(actif["symbol"].split("_USDT")[0] + "USDT." + str(actif["positionType"]))
+    print(actif_open)
     return actif_open
 
 def checkDoublon(strategy, quantite):
@@ -45,5 +46,3 @@ def checkDoublon(strategy, quantite):
 def get_number_of_open_position(strategy):
     futures_client = futures.HTTP(api_key = api_dic[strategy]["api_key"], api_secret = api_dic[strategy]["api_secret"])
     return len(futures_client.open_positions()["data"])
-
-checkDoublon("rsi", 5)

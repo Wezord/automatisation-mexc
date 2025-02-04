@@ -40,9 +40,10 @@ def webhook():
                 position = "long"
             type = 'sell'
 
+        current_app.config['crypto_status'][nom][actif.split(".")[0]] = 0 if type == 'sell' else 1 if type == 'buy' else None
+
         current_app.config['current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
-        print(nom)
-        print(f"Reçu : " , {'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})  # Afficher les données reçues dans la console
+        
          # Répondre au service qui a envoyé le webhook
         return jsonify({"status": "success", "message": "Webhook reçu"}), 200
 
