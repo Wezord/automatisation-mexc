@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://bd33-79-127-134-58.ngrok-free.app"
+const ngrokURL = "https://idrfrance.ngrok.app"
 
 var varStratSelect;
 var selectStrat;
@@ -164,7 +164,6 @@ async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
     // Parcours les alertes
     for (const element of alerte["strategies"]) {
-      timeCoeff = timeCoeff + 1;
       console.log(timeCoeff);
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
       const nomActif = element["actif"].split(".")[0];
@@ -178,13 +177,15 @@ async function process_alert(alerte){
 
       // Achete au long
       if(position == "short" && type == "buy"){
+        timeCoeff = timeCoeff + 1;
         await searchCrypto(nomActif);
-        await attendre(2000* timeAdjustableCoeff + 4000/70 * timeCoeff);
+        await attendre(1000* timeAdjustableCoeff + 3000/70 * timeCoeff);
         await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
       }
       else if (position == "long" && type == "buy"){
+        timeCoeff = timeCoeff + 1;
         await searchCrypto(nomActif);
-        await attendre(2000* timeAdjustableCoeff + 4000/70 * timeCoeff);
+        await attendre(2000* timeAdjustableCoeff + 3000/70 * timeCoeff);
         await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
       }
       else if (type == 'sell'){

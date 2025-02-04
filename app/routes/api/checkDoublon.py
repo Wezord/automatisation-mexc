@@ -12,10 +12,11 @@ def check_doublon():
         strategies_to_send = []
         for actif in doublon :
             if actif.split(".")[0] == "BNXNEWUSDT":
-                actif = 'BNXUSDT.P'
+                actif = 'BNXUSDT.' + actif.split(".")[1]
             elif actif.split(".")[0] == "FILECOINUSDT":
-                actif = "FILUSDT.P"
+                actif = "FILUSDT." + actif.split(".")[1]
             elif actif.split(".")[0] == "LUNANEWUSDT":
-                actif = "LUNAUSDT"
+                actif = "LUNAUSDT." + actif.split(".")[1]
+            print(actif)
             strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit', 'actif': actif.split(".")[0], 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
         return jsonify({"strategies": strategies_to_send}), 200

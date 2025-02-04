@@ -45,3 +45,5 @@ def checkDoublon(strategy, quantite):
 def get_number_of_open_position(strategy):
     futures_client = futures.HTTP(api_key = api_dic[strategy]["api_key"], api_secret = api_dic[strategy]["api_secret"])
     return len(futures_client.open_positions()["data"])
+
+checkDoublon("rsi", 5)
