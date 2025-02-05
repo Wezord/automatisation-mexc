@@ -9,7 +9,7 @@ def get_alert():
     if request.method == "GET" and request.args.get('strategy') != None and request.args.get('strategy') in current_app.config["list_strategy"]:
         strategy = request.args.get('strategy')
         strategies_to_send = [d for d in current_app.config['current_alert'] if d["strategy_order_name"] == strategy]
-        open_position = mapi.get_all_open_position(strategy)
+        open_position = mapi.get_all_open_position(current_app.config['apiKey'][0][request.args.get('strategy')], current_app.config['secretKey'][0][request.args.get('strategy')])
         return jsonify({"strategies": strategies_to_send, "time_coeff" : len(open_position)}), 200
     return jsonify({"error" : "hehe"}), 500
 

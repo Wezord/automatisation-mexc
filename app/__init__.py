@@ -17,39 +17,39 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    app.config['current_alert'] = []
-
-    # Faire l'auto pour ça
-    app.config['open_position_count'] = {
-        "bollinger" : len(mapi.get_all_open_position("bollinger")),
-        "rsi" : len(mapi.get_all_open_position("rsi")),
-        "x3" : len(mapi.get_all_open_position("x3")),
-        "moving" : len(mapi.get_all_open_position("moving")),
-        "x3_uni" : len(mapi.get_all_open_position("x3_uni"))
-    }
-
-    app.config['crypto_status'] = {
-        'x3' : {},
-        'x3_uni' : {},
-        'bollinger' : {},
-        'moving' : {},
-        'rsi' : {}
-    }
+    app.config['current_alert'] = [
+    ]
 
     app.config["list_strategy"] = []
 
+    app.config['apiKey'] = []
+
+    app.config['secretKey'] = []
+
     try:
         # Assure-toi que le chemin du fichier est correct
-        config_path = os.path.join("app/config.json")  # Chemin absolu vers config.json
+        config_path = os.path.join("app/config.json")  # Chemin abrsi_dydu vers config.json
         
         # Ouvre et charge le contenu du fichier config.json
         with open(config_path, 'r') as config_file:
             config_data = json.load(config_file)
             for strategy in config_data["strategy"]:
                 app.config["list_strategy"].append(strategy["value"])
-        print(app.config["list_strategy"])
+            app.config["apiKey"] = config_data["apiKey"]
+            app.config["secretKey"] = config_data["secretKey"]
     except Exception as e:
         print(e)
+
+    # Faire l'auto pour ça
+    app.config['open_position_count'] = {
+        strat : len(mapi.get_all_open_position(app.config['apiKey'][0][strat], app.config['secretKey'][0][strat])) for strat in app.config["list_strategy"]
+    }
+
+    app.config['crypto_status'] = {
+        strat : {} for strat in app.config['list_strategy']
+    }
+
+    print(app.config['crypto_status'])
 
     # Enregistrer les blueprints
     app.register_blueprint(get_alert_bp)

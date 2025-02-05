@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://408e-79-127-169-68.ngrok-free.app"
+const ngrokURL = "https://eba7-79-127-134-61.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -190,14 +190,14 @@ async function process_alert(alerte){
       }
       else if (type == 'sell'){
         if (position == "short"){
-          await attendre(500* timeAdjustableCoeff + 1000/90 * timeCoeff);
+          await attendre(500* timeAdjustableCoeff + 1000/70 * timeCoeff);
           await closeTrade(nomActif, false);
-          await attendre(1000* timeAdjustableCoeff + 1000/90 * timeCoeff);
+          await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
         }
         else if (position == "long"){
-          await attendre(500* timeAdjustableCoeff + 1000/90 * timeCoeff);
+          await attendre(500* timeAdjustableCoeff + 1000/70 * timeCoeff);
           await closeTrade(nomActif, true);
-          await attendre(1000* timeAdjustableCoeff + 1000/90 * timeCoeff);
+          await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
         }
       }
       else if(position == "flat"){
