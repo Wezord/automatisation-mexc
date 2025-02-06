@@ -37,6 +37,8 @@ def create_app():
                 app.config["list_strategy"].append(strategy["value"])
             app.config["apiKey"] = config_data["apiKey"]
             app.config["secretKey"] = config_data["secretKey"]
+            app.config["highest_reach"] = config_data["highest_reach"]
+            app.config["coeff_simu"] = config_data["coeff_simu"]
     except Exception as e:
         print(e)
 
@@ -48,8 +50,6 @@ def create_app():
     app.config['crypto_status'] = {
         strat : {} for strat in app.config['list_strategy']
     }
-
-    print(app.config['crypto_status'])
 
     # Enregistrer les blueprints
     app.register_blueprint(get_alert_bp)

@@ -15,6 +15,3 @@ def checkDoublon(quantite,apiKey,secretKey):
         if float(positionValue) > quantite*1.20:
             doublon.append(actif["symbol"].split("_USDT")[0] + "USDT." + str(actif["positionType"]))
     return doublon
-
-futures_client = futures.HTTP("mx0vglt3oXF4bqZzVf", "4032b9bce9ca4095b85fa14db1a479ff")
-print(futures_client.assets())

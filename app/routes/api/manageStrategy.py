@@ -19,8 +19,17 @@ def add_strategy():
         current_app.config["secretKey"][0][request.args.get('strategy')] = request.args.get('secretKey')
 
         config_path = os.path.join("app/config.json")
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config_data = json.load(f)
+            print(config_data)
+            config_data["strategy"] = strategy
+            config_data["apiKey"] = current_app.config["apiKey"]
+            config_data["secretKey"] = current_app.config["secretKey"]
+
+        # Now open the file again in write mode to save the changes
         with open(config_path, 'w', encoding='utf-8') as f:
-            json.dump({"strategy": strategy, "apiKey" : current_app.config["apiKey"], "secretKey" : current_app.config["secretKey"]}, f, ensure_ascii=False, indent=4)
+            json.dump(config_data, f, ensure_ascii=False, indent=4)
+    
         return jsonify({"message": "Strategy ajouté"}), 200
     return jsonify({"message": "Erreur"}), 500
 
@@ -40,8 +49,15 @@ def del_strategy():
         del current_app.config["secretKey"][0][request.args.get('strategy')]
 
         config_path = os.path.join("app/config.json")
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config_data = json.load(f)
+            print(config_data)
+            config_data["strategy"] = strategy
+            config_data["apiKey"] = current_app.config["apiKey"]
+            config_data["secretKey"] = current_app.config["secretKey"]
+
+        # Now open the file again in write mode to save the changes
         with open(config_path, 'w', encoding='utf-8') as f:
-            json.dump({"strategy": strategy, "apiKey" : current_app.config["apiKey"], "secretKey" : current_app.config["secretKey"]}, f, ensure_ascii=False, indent=4)
+            json.dump(config_data, f, ensure_ascii=False, indent=4)
         return jsonify({"message": "Strategy ajouté"}), 200
-    
     return jsonify({"message": "Erreur"}), 500

@@ -124,5 +124,20 @@
             "rsi_atom": "2a0e56386f9a47fd99ffa993b2a9edbf",
             "rsi_dyd": "4032b9bce9ca4095b85fa14db1a479ff"
         }
+    ],
+    "highest_reach": [
+        {
+            "rsi": 0,
+            "x3": 0,
+            "moving": 0
+        }
+    ],
+    "coeff_simu": [
+        {
+            "rsi": 1,
+            "x3": 0,
+            "moving": 1.67,
+            "bollinger": 1.15
+        }
     ]
 }

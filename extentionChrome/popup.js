@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://eba7-79-127-134-61.ngrok-free.app"
+const ngrokURL = "https://idrfrance.ngrok.app"
 
 var varStratSelect;
 var selectStrat;
@@ -464,6 +464,51 @@ async function closeTrade(crypto,long){//crypto: les deux ou trois lettre majusc
           }
         },
         args: [crypto,class_component,long]  // Passer les arguments ici
+      });
+    }
+  });
+}
+
+async function reinvest(){
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTab = tabs[0];
+
+      // Injecter un script pour vérifier l'état de la case à cocher avant de cliquer
+      chrome.scripting.executeScript({
+        target: { tabId: currentTab.id },
+        func: () => {
+          var element = document.querySelectorAll(".AssetsItem_num__akJcs")[0];
+          if (!element) {
+            console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché.");
+          } 
+          else {
+            // Recupere valeur de la quantité
+            console.log(element.innerHTML.split(" ")[0].split(",")[0] + element.innerHTML.split(" ")[0].split(",")[1]);
+            let quantite = element.innerHTML.split(" ")[0].split(",")[0] + element.innerHTML.split(" ")[0].split(",")[1];
+            const data = {
+              action : "compare",
+              quantite : quantite,
+              strategy : selectStrat
+            };
+            try {
+              const response = fetch(url, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data)
+              });
+              if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+              }
+            } catch (error) {
+              console.error("Erreur :", error);
+            }
+            return element.innerHTML.split(" ")[0].split(",")[0] + element.innerHTML.split(" ")[0].split(",")[1];
+          }
+        },
+        args: [] // Passer les arguments ici
       });
     }
   });
