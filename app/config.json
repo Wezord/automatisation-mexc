@@ -127,17 +127,20 @@
     ],
     "highest_reach": [
         {
-            "rsi": 0,
-            "x3": 0,
-            "moving": 0
+            "rsi": 7873,
+            "x3": 38477,
+            "moving": 3271,
+            "bollinger" : 4752,
+            "rsi_dyd": 1020.479
         }
     ],
     "coeff_simu": [
         {
-            "rsi": 1,
-            "x3": 0,
-            "moving": 1.67,
-            "bollinger": 1.15
+            "rsi": 5.93,
+            "x3": 14.4795,
+            "moving": 18.4535,
+            "bollinger": 9.6485,
+            "rsi_dyd": 1.16
         }
     ]
 }

@@ -2,11 +2,11 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://idrfrance.ngrok.app"
+const ngrokURL = "https://a5e3-83-202-127-170.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
-var selectQuantite;
+var selectQuantite = 0;
 var timeCoeff;
 var timeAdjustableCoeff;
 
@@ -45,6 +45,7 @@ async function infiniteTrade(strat_to_use = "alert") {
       catch (error) {
         console.error("Erreur :", error);
       }
+
       console.log("process data");
       await process_alert(strategies);
       strategies = []
@@ -86,8 +87,9 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
 
   const selectedKey = selectElement.value;
   selectStrat = selectedKey;
-  selectQuantite = inputElement.value;
   timeAdjustableCoeff = timeElement.value;
+  console.log("Démarrage du Bot")
+  await reinvest();
 
   // Trouver la valeur correspondante dans le dictionnaire
   const value = dicStrats[selectedKey];
@@ -469,50 +471,85 @@ async function closeTrade(crypto,long){//crypto: les deux ou trois lettre majusc
   });
 }
 
-async function reinvest(){
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length > 0) {
-      const currentTab = tabs[0];
+async function reinvest() {
+  console.log("appel");
+  let actualQuantite = 0;
 
-      // Injecter un script pour vérifier l'état de la case à cocher avant de cliquer
-      chrome.scripting.executeScript({
-        target: { tabId: currentTab.id },
-        func: () => {
-          var element = document.querySelectorAll(".AssetsItem_num__akJcs")[0];
-          if (!element) {
-            console.log("Aucun élément avec la classe voulue trouvé dans l'élément recherché.");
-          } 
-          else {
-            // Recupere valeur de la quantité
-            console.log(element.innerHTML.split(" ")[0].split(",")[0] + element.innerHTML.split(" ")[0].split(",")[1]);
-            let quantite = element.innerHTML.split(" ")[0].split(",")[0] + element.innerHTML.split(" ")[0].split(",")[1];
-            const data = {
-              action : "compare",
-              quantite : quantite,
-              strategy : selectStrat
-            };
-            try {
-              const response = fetch(url, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data)
-              });
-              if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-              }
-            } catch (error) {
-              console.error("Erreur :", error);
+  // Attendre que chrome.tabs.query termine et renvoie le tab actif
+  const tabs = await new Promise((resolve) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      resolve(tabs);
+    });
+  });
+
+  if (tabs.length > 0) {
+    const currentTab = tabs[0];
+
+    // Injecter un script dans l'onglet actif pour récupérer la quantité
+    actualQuantite = await new Promise((resolve) => {
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: currentTab.id },
+          func: () => {
+            // Script exécuté dans la page pour obtenir la quantité
+            var element = document.querySelectorAll(".AssetsItem_num__akJcs")[0];
+            if (!element) {
+              console.log("Aucun élément avec la classe voulue trouvé.");
+              return null; // Retourner null si l'élément est introuvable
+            } else {
+              // Récupérer la quantité de l'élément
+              const quantityText = element.innerHTML.split(" ")[0].split(",");
+              const actualQuantite = quantityText[0] + quantityText[1];
+              console.log("Quantité récupérée :", actualQuantite);
+              return actualQuantite; // Retourner la quantité
             }
-            return element.innerHTML.split(" ")[0].split(",")[0] + element.innerHTML.split(" ")[0].split(",")[1];
           }
         },
-        args: [] // Passer les arguments ici
-      });
+        (result) => {
+          // Ici, nous récupérons le résultat renvoyé par le script injecté
+          resolve(result[0]?.result); // Resolve la promesse avec la quantité récupérée
+        }
+      );
+    });
+
+    // Vérifier si actualQuantite a une valeur valide
+    if (!actualQuantite) {
+      console.log("Aucune quantité récupérée, terminaison de la fonction.");
+      return; // Si aucune quantité n'est récupérée, arrêtez l'exécution
     }
-  });
+
+    // Utiliser la quantité récupérée pour effectuer la requête
+    const data = {
+      action: "compare",
+      quantite: actualQuantite,
+      strategy: selectStrat
+    };
+
+    try {
+      const response = await fetch(ngrokURL + "/highest_reach", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+      }
+
+      const datas = await response.json();
+      console.log("Réponse :", datas);
+      selectQuantite = datas["quantite"];
+    } catch (error) {
+      console.error("Erreur :", error);
+    }
+  }
+
+  console.log("La quantité finale est ", selectQuantite);
 }
+
+
 
 async function send_error(error){
   try {

@@ -8,23 +8,25 @@ from app.routes.api.delete_alert import delete_alert_bp
 from app.routes.api.config import config_bp
 from app.routes.api.webhook import webhook_bp
 from app.routes.api.checkDoublon import check_doublon_bp
-from app.routes.api.manageStrategy import add_strategy_bp
-from app.routes.api.manageStrategy import del_strategy_bp
-import json
-import os
+from app.routes.api.manageStrategy import add_strategy_bp, del_strategy_bp
+from app.routes.api.highest_reach import highest_reach_bp
+import os, json
 
 
 def create_app():
     app = Flask(__name__)
 
-    app.config['current_alert'] = [
-    ]
+    app.config['current_alert'] = []
 
     app.config["list_strategy"] = []
 
     app.config['apiKey'] = []
 
     app.config['secretKey'] = []
+
+    app.config["highest_reach"] = []
+
+    app.config["coeff_simu"] = []
 
     try:
         # Assure-toi que le chemin du fichier est correct
@@ -63,5 +65,7 @@ def create_app():
     app.register_blueprint(rsi_storj_bp)
     app.register_blueprint(add_strategy_bp)
     app.register_blueprint(del_strategy_bp)
+    app.register_blueprint(highest_reach_bp)
+
 
     return app
