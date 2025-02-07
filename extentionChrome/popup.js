@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://a5e3-83-202-127-170.ngrok-free.app"
+const ngrokURL = "https://cffe-79-127-134-26.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -164,6 +164,8 @@ populateSelectOptions();
 // Fonction principale
 async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
+    // Selectionne le bon montant
+    await reinvest();
     // Parcours les alertes
     for (const element of alerte["strategies"]) {
       console.log(timeCoeff);

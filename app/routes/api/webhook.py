@@ -23,6 +23,8 @@ def webhook():
         time = data.get('time')
         alert_message = data.get('alert_message')
 
+        print("Data reçu" , data)
+
         if actif == "BNXNEWUSDT.P":
             actif = 'BNXUSDT.P'
         elif actif == "FILECOINUSDT.P":
@@ -39,18 +41,17 @@ def webhook():
                 position = "long"
             type = 'sell'
 
-        if current_app.config['current_alert'] != []:
-            for alert in current_app.config['current_alert']:
-                if nom in alert.values() and actif in alert.values() and alert_message in alert.values() and position in alert.values() and type in alert.values():
+            
+        if current_app.config['temp_current_alert'] != []:
+            for alert in current_app.config['temp_current_alert']:
+                if nom in alert.values() and actif in alert.values() and alert_message in alert.values() and position in alert.values() and type in alert.values() and time in alert.values():
+                    print("Delete double")
                     return jsonify({"status": "success", "message": "Reçu mais existe déjà"}), 200
-                else :
-                    print((f"Reçu : " , {'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time}))
-                    current_app.config['crypto_status'][nom][actif.split(".")[0]] = 0 if type == 'sell' else 1 if type == 'buy' else None
-                    current_app.config['current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
-        else:
-            print((f"Reçu : " , {'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time}))
-            current_app.config['crypto_status'][nom][actif.split(".")[0]] = 0 if type == 'sell' else 1 if type == 'buy' else None
-            current_app.config['current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
+        current_app.config['crypto_status'][nom][actif.split(".")[0]] = 0 if type == 'sell' else 1 if type == 'buy' else None
+        current_app.config['current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
+
+        print(current_app.config['temp_current_alert'])
+        current_app.config['temp_current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
          # Répondre au service qui a envoyé le webhook
         return jsonify({"status": "success", "message": "Webhook reçu"}), 200
 

@@ -12,9 +12,10 @@ from app.routes.api.manageStrategy import add_strategy_bp, del_strategy_bp
 from app.routes.api.highest_reach import highest_reach_bp
 import os, json
 
-
 def create_app():
     app = Flask(__name__)
+
+    app.config['temp_current_alert'] = []
 
     app.config['current_alert'] = []
 
@@ -44,7 +45,6 @@ def create_app():
     except Exception as e:
         print(e)
 
-    # Faire l'auto pour ça
     app.config['open_position_count'] = {
         strat : len(mapi.get_all_open_position(app.config['apiKey'][0][strat], app.config['secretKey'][0][strat])) for strat in app.config["list_strategy"]
     }

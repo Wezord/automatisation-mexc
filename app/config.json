@@ -130,8 +130,9 @@
             "rsi": 7873,
             "x3": 38477,
             "moving": 3271,
-            "bollinger" : 4752,
-            "rsi_dyd": 1020.479
+            "bollinger": 4752,
+            "rsi_dyd": 1020.479,
+            "rsi_storj": 870.6963
         }
     ],
     "coeff_simu": [
@@ -140,7 +141,8 @@
             "x3": 14.4795,
             "moving": 18.4535,
             "bollinger": 9.6485,
-            "rsi_dyd": 1.16
+            "rsi_dyd": 1.16,
+            "rsi_storj": 800
         }
     ]
 }

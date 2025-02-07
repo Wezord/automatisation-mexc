@@ -15,7 +15,6 @@ def highest_reach():
         quantite = float(cleaned_num_str)
 
         strategy = data.get("strategy")
-        print("hoho", quantite,current_app.config["highest_reach"][0][strategy] )
         if quantite > current_app.config["highest_reach"][0][strategy]:
             print("New value for ", strategy, quantite)
             config_path = os.path.join("app/config.json")
@@ -27,6 +26,5 @@ def highest_reach():
                 config_data["highest_reach"] = current_app.config["highest_reach"]
                 json.dump(config_data, f, ensure_ascii=False, indent=4)
             return jsonify({'quantite' : math.floor(quantite/current_app.config['coeff_simu'][0][strategy])}), 200
-        print("bon", math.floor(current_app.config['highest_reach'][0][strategy]/current_app.config['coeff_simu'][0][strategy]))
         return jsonify({'quantite' : math.floor(current_app.config['highest_reach'][0][strategy]/current_app.config['coeff_simu'][0][strategy])}), 200
     return jsonify({'Response' : "Not good method"}), 400

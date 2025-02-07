@@ -21,7 +21,6 @@ def add_strategy():
         config_path = os.path.join("app/config.json")
         with open(config_path, 'r', encoding='utf-8') as f:
             config_data = json.load(f)
-            print(config_data)
             config_data["strategy"] = strategy
             config_data["apiKey"] = current_app.config["apiKey"]
             config_data["secretKey"] = current_app.config["secretKey"]
@@ -51,7 +50,6 @@ def del_strategy():
         config_path = os.path.join("app/config.json")
         with open(config_path, 'r', encoding='utf-8') as f:
             config_data = json.load(f)
-            print(config_data)
             config_data["strategy"] = strategy
             config_data["apiKey"] = current_app.config["apiKey"]
             config_data["secretKey"] = current_app.config["secretKey"]
