@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://cffe-79-127-134-26.ngrok-free.app"
+const ngrokURL = "https://idrfrance.ngrok.app"
 
 var varStratSelect;
 var selectStrat;
@@ -165,7 +165,6 @@ populateSelectOptions();
 async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
     // Selectionne le bon montant
-    await reinvest();
     // Parcours les alertes
     for (const element of alerte["strategies"]) {
       console.log(timeCoeff);
@@ -215,6 +214,7 @@ async function process_alert(alerte){
       // Supprime l'alerte
       await attendre(500);
     }
+    await reinvest();
   }
   else {
     console.log("Pas de donnée à process")
@@ -447,24 +447,17 @@ async function closeTrade(crypto,long){//crypto: les deux ou trois lettre majusc
             const matchingElements = Array.from(listElements).filter((element) =>
               element.textContent.trim().toLowerCase().split("usdt")[0] === crypto.toLowerCase().split("usdt")[0]);
             const nbMatchingElements=matchingElements.length;
-            if (nbMatchingElements==1){
-              const bouton=(matchingElements[0].querySelectorAll(`.FastClose_closeBtn__ze4z7`))[0];
-              bouton.click();
-            }
-            else if(nbMatchingElements>1){
-              console.log(nbMatchingElements," éléments correponsdants ont été détectés");
-              const matchingElements2=Array.from(matchingElements).filter((element) =>
-                element.textContent.trim().toLowerCase().includes(long ? "long" : "short"));
-              console.log("Nombre de nouveaux éléments correspndants: ",matchingElements2.length);
-
+            console.log(nbMatchingElements," éléments correponsdants ont été détectés");
+            const matchingElements2=Array.from(matchingElements).filter((element) =>
+              element.textContent.trim().toLowerCase().includes(long ? "long" : "short"));
+            console.log("Nombre de nouveaux éléments correspndants: ",matchingElements2.length);
               if(matchingElements2.length==1){                
-                const bouton=(matchingElements2[0].querySelectorAll(`.FastClose_closeBtn__ze4z7`))[0];
+                const bouton=(matchingElements2[0].querySelectorAll(`button`))[0];
                 bouton.click()
               }
               else{
                 console.log("Trop d'éléments correspondants. Abandon");
               }
-            } 
           }
         },
         args: [crypto,class_component,long]  // Passer les arguments ici
