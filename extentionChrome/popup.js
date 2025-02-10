@@ -2,13 +2,15 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://idrfrance.ngrok.app"
+const ngrokURL = "https://b9ef-79-127-134-44.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
 var selectQuantite = 0;
 var timeCoeff;
 var timeAdjustableCoeff;
+
+var isAutoReinvest = true;
 
 var countOpenOrder;
 
@@ -87,9 +89,10 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
 
   const selectedKey = selectElement.value;
   selectStrat = selectedKey;
-  timeAdjustableCoeff = timeElement.value;
+  timeAdjustableCoeff = timeCoeffElement.value;
   console.log("Démarrage du Bot")
-  await reinvest();
+
+  if(isAutoReinvest) {console.log("invest"); await reinvest();}
 
   // Trouver la valeur correspondante dans le dictionnaire
   const value = dicStrats[selectedKey];
@@ -102,6 +105,49 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
   infiniteTrade(selectStrat);
 });
 
+document.getElementById("inputQuantiteCheckbox").addEventListener("change", async () => {
+  if (document.getElementById("inputQuantiteCheckbox").checked) {
+
+    isAutoReinvest = false;
+    const selectedKey = inputQuantieElement.value;
+    selectQuantite=selectedKey;
+    console.log(selectedKey)
+    if(!selectedKey) { alert("Pas de quantité rentrée !"); return;}
+
+    console.log("Changement de quantité manuellement")
+    /** 
+    const data = {
+      quantite: parseInt(selectedKey),
+      strategy: selectStrat
+    };
+    try {
+      const response = await fetch(ngrokURL + "/set_highest_reach", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+      }
+
+      const datas = await response.json();
+      console.log("Réponse :", datas);
+      selectQuantite = datas["quantite"];
+    } catch (error) {
+      console.error("Erreur :", error);
+    }
+      */
+  }
+  else {
+    isAutoReinvest = true;
+    await reinvest(); 
+    console.log("Activation de l'auto invest")
+  }
+});
+
 ///////////////////////////////////////////////////
 /////Code pour le changement de compte/////////////
 ///////////////////////////////////////////////////
@@ -109,8 +155,8 @@ document.getElementById("sendRequest").addEventListener("click", async () => {
 const selectElement = document.getElementById("choixStrategies");
 const resultElement = document.getElementById("choixStratResult");
 const formElement = document.getElementById("strategiesForm");
-const inputElement = document.getElementById("inputQuantite");
-const timeElement = document.getElementById("timeCoeff");
+const inputQuantieElement = document.getElementById("inputQuantite");
+const timeCoeffElement = document.getElementById("timeCoeff");
 
 // Remplir la liste déroulante avec les clés du dictionnaire
 
@@ -203,18 +249,13 @@ async function process_alert(alerte){
           await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
         }
       }
-      else if(position == "flat"){
-        await closeTrade(nomActif, true);
-        await attendre(500);
-        await closeTrade(nomActif, false);
-      }
       else { 
         console.log("wut?")
       }
       // Supprime l'alerte
       await attendre(500);
     }
-    await reinvest();
+    if (isAutoReinvest) {await reinvest();}
   }
   else {
     console.log("Pas de donnée à process")

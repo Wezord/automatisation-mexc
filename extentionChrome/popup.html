@@ -20,13 +20,40 @@
       background-color: #007bff;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 8px 16px;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px; /* Ajout d'espace entre les boutons */
+      margin-top: 10px;
+      font-size: 14px;
     }
     button:hover {
       background-color: #0056b3;
+    }
+    .input-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .input-container input {
+      padding: 12px;
+      margin-right: 5px;
+      font-size: 10px;
+      width: 80px;
+      height: 5px;
+    }
+    .input-container button {
+      padding: 5px 10px;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+    /* Agrandissement de la checkbox */
+    #inputQuantiteCheckbox {
+      transform: scale(1); /* Agrandit visuellement la checkbox */
+      transform-origin: center; /* Garde l'origine au centre pour un agrandissement uniforme */
+      margin-left: 10px;
+      height : 20px;
+      width: 50px;
+      pointer-events: auto; /* Permet les clics uniquement sur la checkbox */
     }
   </style>
 </head>
@@ -34,7 +61,14 @@
   <h1>Bienvenue !</h1>
   <p>Appuyez sur le bouton pour voir une action.</p>
   <button id="sendRequest">Démarrer le BOT</button>
-  <input type="int" id="timeCoeff" placeholder="Time Coeff" value="1">
+  <div class="input-container">
+    <input type="int" id="timeCoeff" placeholder="Time Coeff">
+    <button id="timeCoeffButton">Valider</button>
+  </div>
+  <div class="input-container">
+    <input type="int" id="inputQuantite" placeholder="Quantité USDT">
+    <input type="checkbox" id="inputQuantiteCheckbox"> <!-- Checkbox visuellement agrandie -->
+  </div>
   <form id="strategiesForm">
     <label for="choixStrategies">Stratégie: </label>
     <select id="choixStrategies">

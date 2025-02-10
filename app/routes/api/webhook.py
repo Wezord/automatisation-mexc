@@ -4,8 +4,6 @@ webhook_bp = Blueprint('webhook', __name__)
 
 authorized_ip = ["52.89.214.238", "34.212.75.30", "54.218.53.128", "52.32.178.7"]
 
-open_order_count = 0
-
 @webhook_bp.route('/webhook', methods=['POST', 'GET'])
 def webhook():
     """
@@ -50,7 +48,6 @@ def webhook():
         current_app.config['crypto_status'][nom][actif.split(".")[0]] = 0 if type == 'sell' else 1 if type == 'buy' else None
         current_app.config['current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
 
-        print(current_app.config['temp_current_alert'])
         current_app.config['temp_current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
          # Répondre au service qui a envoyé le webhook
         return jsonify({"status": "success", "message": "Webhook reçu"}), 200

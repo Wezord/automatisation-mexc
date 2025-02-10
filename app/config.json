@@ -9,18 +9,6 @@
             "label": "bollinger_op"
         },
         {
-            "value": "moving_xrp",
-            "label": "moving_xrp"
-        },
-        {
-            "value": "moving_chz",
-            "label": "moving_chz"
-        },
-        {
-            "value": "moving",
-            "label": "moving"
-        },
-        {
             "value": "rsi_dyd",
             "label": "rsi_dyd"
         },
@@ -128,11 +116,12 @@
     "highest_reach": [
         {
             "rsi": 7873,
-            "x3": 38477,
+            "x3": 870.686,
             "moving": 3271,
             "bollinger": 4752,
             "rsi_dyd": 1020.479,
-            "rsi_storj": 870.6963
+            "rsi_storj": 150,
+            "null": 5
         }
     ],
     "coeff_simu": [
@@ -142,7 +131,7 @@
             "moving": 18.4535,
             "bollinger": 9.6485,
             "rsi_dyd": 1.16,
-            "rsi_storj": 800
+            "rsi_storj": 125
         }
     ]
 }

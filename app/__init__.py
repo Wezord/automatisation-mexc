@@ -9,7 +9,7 @@ from app.routes.api.config import config_bp
 from app.routes.api.webhook import webhook_bp
 from app.routes.api.checkDoublon import check_doublon_bp
 from app.routes.api.manageStrategy import add_strategy_bp, del_strategy_bp
-from app.routes.api.highest_reach import highest_reach_bp
+from app.routes.api.highest_reach import highest_reach_bp, set_highest_reach_bp
 import os, json
 
 def create_app():
@@ -66,6 +66,6 @@ def create_app():
     app.register_blueprint(add_strategy_bp)
     app.register_blueprint(del_strategy_bp)
     app.register_blueprint(highest_reach_bp)
-
-
+    app.register_blueprint(set_highest_reach_bp)
+    
     return app
