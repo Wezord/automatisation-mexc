@@ -8,7 +8,7 @@ var varStratSelect;
 var selectStrat;
 var selectQuantite = 0;
 var timeCoeff;
-var timeAdjustableCoeff;
+var timeAdjustableCoeff = 1;
 
 var isAutoReinvest = true;
 
@@ -110,7 +110,7 @@ document.getElementById("inputQuantiteCheckbox").addEventListener("change", asyn
 
     isAutoReinvest = false;
     const selectedKey = inputQuantieElement.value;
-    selectQuantite=selectedKey;
+    timeCoeff=selectedKey;
     console.log(selectedKey)
     if(!selectedKey) { alert("Pas de quantité rentrée !"); return;}
 
@@ -148,23 +148,11 @@ document.getElementById("inputQuantiteCheckbox").addEventListener("change", asyn
   }
 });
 
-document.getElementById("inputQuantiteCheckbox").addEventListener("change", async () => {
-  if (document.getElementById("inputQuantiteCheckbox").checked) {
-
-    isAutoReinvest = false;
-    const selectedKey = inputQuantieElement.value;
-    selectQuantite=selectedKey;
-    console.log(selectedKey)
-    if(!selectedKey) { alert("Pas de quantité rentrée !"); return;}
-
-    console.log("Changement de quantité manuellement")
-
-  }
-  else {
-    isAutoReinvest = true;
-    await reinvest(); 
-    console.log("Activation de l'auto invest")
-  }
+document.getElementById("timeCoeffButton").addEventListener("click", async () => {
+  const selectedKey = timeCoeffElement.value;
+  timeAdjustableCoeff=selectedKey;
+  console.log("Nouveau time coeff", selectedKey)
+  if(!selectedKey) { alert("Pas de coeff rentrée !"); return;}
 });
 
 ///////////////////////////////////////////////////
@@ -603,24 +591,5 @@ async function reinvest() {
   }
 
   console.log("La quantité finale est ", selectQuantite);
-}
-
-
-
-async function send_error(error){
-  try {
-    const response = await fetch(ngrokURL + "/send_error", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({"error" : error})
-    });
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP : ${response.status}`);
-    }
-  } catch (error) {
-    console.error("Erreur :", error);
-  }
 }
   

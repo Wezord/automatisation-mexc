@@ -10,7 +10,7 @@ def webhook():
     Endpoint pour recevoir des données du webhook.
     """
     data = request.json  # Récupérer les données JSON envoyées par le webhook
-    if request.method == 'POST':
+    if request.method == 'POST' and request.headers.get('X-Forwarded-For', request.remote_addr) in authorized_ip:
         # Extrait les données envoyées dans la requête POST (ex: {"nom": "Nouvelle stratégie"})
         data = request.json
         nom = data.get('strategy_order_name')  # Supposons que vous envoyez un champ "nom" dans le JSON
@@ -53,5 +53,5 @@ def webhook():
         return jsonify({"status": "success", "message": "Webhook reçu"}), 200
 
     else:
-        return jsonify({'status': 'error', 'message': 'Données manquantes'}), 400
+        return jsonify({'status': 'error', 'message': 'Unauthorized access'}), 400
     
