@@ -148,6 +148,25 @@ document.getElementById("inputQuantiteCheckbox").addEventListener("change", asyn
   }
 });
 
+document.getElementById("inputQuantiteCheckbox").addEventListener("change", async () => {
+  if (document.getElementById("inputQuantiteCheckbox").checked) {
+
+    isAutoReinvest = false;
+    const selectedKey = inputQuantieElement.value;
+    selectQuantite=selectedKey;
+    console.log(selectedKey)
+    if(!selectedKey) { alert("Pas de quantité rentrée !"); return;}
+
+    console.log("Changement de quantité manuellement")
+
+  }
+  else {
+    isAutoReinvest = true;
+    await reinvest(); 
+    console.log("Activation de l'auto invest")
+  }
+});
+
 ///////////////////////////////////////////////////
 /////Code pour le changement de compte/////////////
 ///////////////////////////////////////////////////
@@ -225,32 +244,33 @@ async function process_alert(alerte){
       await delete_alert(element);
 
       // Achete au long
-      if(position == "short" && type == "buy"){
-        timeCoeff = timeCoeff + 1;
-        await searchCrypto(nomActif);
-        await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
-        await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
+      if(type == "buy"){
+        if(position == "short")
+        {
+          timeCoeff = timeCoeff + 1;
+          await searchCrypto(nomActif);
+          await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
+          await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
+        }
+        else
+        {
+          timeCoeff = timeCoeff + 1;
+          await searchCrypto(nomActif);
+          await attendre(2000* timeAdjustableCoeff + 3000/70 * timeCoeff);
+          await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
+        }
       }
-      else if (position == "long" && type == "buy"){
-        timeCoeff = timeCoeff + 1;
-        await searchCrypto(nomActif);
-        await attendre(2000* timeAdjustableCoeff + 3000/70 * timeCoeff);
-        await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
-      }
-      else if (type == 'sell'){
+      else {
         if (position == "short"){
           await attendre(500* timeAdjustableCoeff + 1000/70 * timeCoeff);
           await closeTrade(nomActif, false);
           await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
         }
-        else if (position == "long"){
+        else {
           await attendre(500* timeAdjustableCoeff + 1000/70 * timeCoeff);
           await closeTrade(nomActif, true);
           await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
         }
-      }
-      else { 
-        console.log("wut?")
       }
       // Supprime l'alerte
       await attendre(500);
