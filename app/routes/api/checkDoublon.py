@@ -14,12 +14,12 @@ def check_doublon():
         for actif in current_crypto:
             actif_name = actif.split(".")[0]
             if temp_crypt != [] and actif_name in temp_crypt:
-                strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
+                strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'take_profit' : '0', 'time': '2025-01-11T17:54:00Z'})
                 strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long"  ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
             temp_crypt.append(actif_name)
             if actif_name in current_app.config['crypto_status'][data.get('strategy')]:
                 if current_app.config['crypto_status'][data.get('strategy')][actif_name] == 0:
-                    strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
+                    strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'take_profit' : '0', 'time': '2025-01-11T17:54:00Z'})
         print(doublon)
         for actif in doublon :
             actif_name = actif.split(".")[0]
@@ -29,5 +29,5 @@ def check_doublon():
                 actif = "FILUSDT." + actif.split(".")[1]
             elif actif_name == "LUNANEWUSDT":
                 actif = "LUNAUSDT." + actif.split(".")[1]
-            strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit Doublon', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
+            strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit Doublon', 'actif': actif_name, 'stop_loss': '0', 'take_profit' : '0', 'time': '2025-01-11T17:54:00Z'})
         return jsonify({"strategies": strategies_to_send}), 200

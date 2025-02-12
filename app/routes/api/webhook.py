@@ -17,6 +17,7 @@ def webhook():
         type = data.get('type')
         position = data.get('position')
         stop_loss = data.get('stop_loss')
+        take_profit = data.get('take_profit')
         actif = data.get('actif')
         time = data.get('time')
         alert_message = data.get('alert_message')
@@ -46,9 +47,8 @@ def webhook():
                     print("Delete double")
                     return jsonify({"status": "success", "message": "Reçu mais existe déjà"}), 200
         current_app.config['crypto_status'][nom][actif.split(".")[0]] = 0 if type == 'sell' else 1 if type == 'buy' else None
-        current_app.config['current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
-
-        current_app.config['temp_current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'time':time})
+        current_app.config['current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'take_profit' : take_profit, 'time':time})
+        current_app.config['temp_current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'take_profit' : take_profit, 'time':time})
          # Répondre au service qui a envoyé le webhook
         return jsonify({"status": "success", "message": "Webhook reçu"}), 200
 

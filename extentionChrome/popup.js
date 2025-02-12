@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://idrfrance.ngrok.app"
+const ngrokURL = "https://1c4f-83-202-127-170.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -226,8 +226,21 @@ async function process_alert(alerte){
       const position = element.position;
       const type = element.type;
       const stopLoss = parseInt(element.stop_loss, 10);
-      const valueStopLoss = parseFloat(element.alert_message, 10);
-      console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " ");
+      const takeProfit = parseInt(element.take_profit, 10);
+      let valueStopLoss = 0;
+      let valueTakeProfit = 0;
+
+      console.log(element.alert_message.split("SL :"))
+      if(stopLoss == 1 && element.alert_message.split("SL :").length > 1){
+        valueStopLoss = parseFloat(element.alert_message.split("SL :")[1].split(" TP :")[0], 10);
+      }
+
+      console.log(element.alert_message.split("TP :"))
+      if(takeProfit == 1 && element.alert_message.split("TP :").length > 1){
+        valueTakeProfit = parseFloat(element.alert_message.split("TP :")[1], 10);
+      }
+      
+      console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " " + takeProfit + " " + valueTakeProfit);
 
       await delete_alert(element);
 
@@ -238,14 +251,14 @@ async function process_alert(alerte){
           timeCoeff = timeCoeff + 1;
           await searchCrypto(nomActif);
           await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
-          await buy(selectQuantite, long = false, stopLoss, valueStopLoss);
+          await buy(selectQuantite, long = false, stopLoss, valueStopLoss, takeProfit, valueTakeProfit);
         }
         else
         {
           timeCoeff = timeCoeff + 1;
           await searchCrypto(nomActif);
           await attendre(2000* timeAdjustableCoeff + 3000/70 * timeCoeff);
-          await buy(selectQuantite, long = true, stopLoss, valueStopLoss);
+          await buy(selectQuantite, long = true, stopLoss, valueStopLoss, takeProfit, valueTakeProfit);
         }
       }
       else {
@@ -372,7 +385,7 @@ function fillButton(class_component, numero_component, value) {
     });     
 }
 
-async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0){
+async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit = 0, valueTakeProfit = 0 ){
   //Clique sur ouvrir
   click_button("#mexc_contract_v_open_position .ant-input", 0);
   await attendre(500);
@@ -390,16 +403,16 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit=0
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1, valueStopLoss);
       await attendre(500);
-      console.log("achat");
+      console.log("sl");
     }
     if(takeProfit>0){
       // Clique sur la case du takeprofit
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0);
       await attendre(500);
       // Remplie la case
-      fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0, takeProfit);
+      fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0, valueTakeProfit);
       await attendre(500);
-      console.log("achat");
+      console.log("tp");
     }
   }
   // Appuie sur open long/shirt
