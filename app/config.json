@@ -1,14 +1,6 @@
 {
     "strategy": [
         {
-            "value": "x3_uni",
-            "label": "x3_uni"
-        },
-        {
-            "value": "bollinger_op",
-            "label": "bollinger_op"
-        },
-        {
             "value": "rsi_dyd",
             "label": "rsi_dyd"
         },
@@ -116,12 +108,21 @@
     "highest_reach": [
         {
             "rsi": 7873,
-            "x3": 870.686,
+            "x3": 38477,
             "moving": 3271,
-            "bollinger": 4752,
-            "rsi_dyd": 1020.479,
-            "rsi_storj": 150,
-            "null": 5
+            "bollinger": 450,
+            "rsi_dyd": 1080,
+            "rsi_storj": 1056,
+            "rsi_atom" : 1000,
+            "x3_gala" : 1148,
+            "x3_uni" : 1175,
+            "x3_luna" : 1175,
+            "moving_ens" : 824,
+            "moving_chz" : 863,
+            "moving_xrp" : 861,
+            "bollinger_knc" : 832,
+            "bollinger_ens" : 769,
+            "bollinger_op" : 1000
         }
     ],
     "coeff_simu": [
@@ -130,8 +131,18 @@
             "x3": 14.4795,
             "moving": 18.4535,
             "bollinger": 9.6485,
-            "rsi_dyd": 1.16,
-            "rsi_storj": 125
+            "rsi_dyd": 1080,
+            "rsi_storj": 1056,
+            "rsi_atom" : 1000,
+            "x3_gala" : 1148,
+            "x3_uni" : 1175,
+            "x3_luna" : 1175,
+            "moving_ens" : 0.552589328,
+            "moving_chz" : 0.4771895551,
+            "moving_xrp" : 0.3073251071,
+            "bollinger_knc" : 0.2465210528,
+            "bollinger_ens" : 0.365329640569,
+            "bollinger_op" : 0.3631485094
         }
     ]
 }
