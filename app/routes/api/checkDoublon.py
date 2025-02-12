@@ -10,16 +10,24 @@ def check_doublon():
         doublon = mapi.checkDoublon(int(data.get("quantite")), current_app.config['apiKey'][0][data.get('strategy')], current_app.config['secretKey'][0][data.get('strategy')])
         current_crypto = mapi.get_all_open_position(current_app.config['apiKey'][0][data.get('strategy')], current_app.config['secretKey'][0][data.get('strategy')])
         strategies_to_send = []
+        temp_crypt = []
         for actif in current_crypto:
-            if actif.split(".")[0] in current_app.config['crypto_status'][data.get('strategy')]:
-                if current_app.config['crypto_status'][data.get('strategy')][actif.split(".")[0]] == 0:
-                    strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif.split(".")[0], 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
+            actif_name = actif.split(".")[0]
+            if temp_crypt != [] and actif_name in temp_crypt:
+                strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
+                strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long"  ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
+            temp_crypt.append(actif_name)
+            if actif_name in current_app.config['crypto_status'][data.get('strategy')]:
+                if current_app.config['crypto_status'][data.get('strategy')][actif_name] == 0:
+                    strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
+        print(doublon)
         for actif in doublon :
-            if actif.split(".")[0] == "BNXNEWUSDT":
+            actif_name = actif.split(".")[0]
+            if actif_name == "BNXNEWUSDT":
                 actif = 'BNXUSDT.' + actif.split(".")[1]
-            elif actif.split(".")[0] == "FILECOINUSDT":
+            elif actif_name == "FILECOINUSDT":
                 actif = "FILUSDT." + actif.split(".")[1]
-            elif actif.split(".")[0] == "LUNANEWUSDT":
+            elif actif_name == "LUNANEWUSDT":
                 actif = "LUNAUSDT." + actif.split(".")[1]
-            strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit Doublon', 'actif': actif.split(".")[0], 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
+            strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit Doublon', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
         return jsonify({"strategies": strategies_to_send}), 200

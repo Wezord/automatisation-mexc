@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://b9ef-79-127-134-44.ngrok-free.app"
+const ngrokURL = "https://idrfrance.ngrok.app"
 
 var varStratSelect;
 var selectStrat;
@@ -110,7 +110,7 @@ document.getElementById("inputQuantiteCheckbox").addEventListener("change", asyn
 
     isAutoReinvest = false;
     const selectedKey = inputQuantieElement.value;
-    timeCoeff=selectedKey;
+    selectQuantite=selectedKey;
     console.log(selectedKey)
     if(!selectedKey) { alert("Pas de quantité rentrée !"); return;}
 
