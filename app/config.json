@@ -63,6 +63,10 @@
         {
             "value": "rsi",
             "label": "rsi"
+        },
+        {
+            "value": "accel",
+            "label": "accel"
         }
     ],
     "apiKey": [
@@ -82,7 +86,8 @@
             "bollinger_knc": "mx0vgll3KI0DzvNQSZ",
             "bollinger_ens": "mx0vglzDDchtqYfcSv",
             "rsi_atom": "mx0vglVKDZ0tAA71zi",
-            "rsi_dyd": "mx0vglt3oXF4bqZzVf"
+            "rsi_dyd": "mx0vglt3oXF4bqZzVf",
+            "accel": "mx0vglt3oXF4bqZzVf"
         }
     ],
     "secretKey": [
@@ -102,7 +107,8 @@
             "bollinger_knc": "adbe8010219c41a0a9cbd28077b56813",
             "bollinger_ens": "0989528d21e94419b10bd512d2df3d8a",
             "rsi_atom": "2a0e56386f9a47fd99ffa993b2a9edbf",
-            "rsi_dyd": "4032b9bce9ca4095b85fa14db1a479ff"
+            "rsi_dyd": "4032b9bce9ca4095b85fa14db1a479ff",
+            "accel": "4032b9bce9ca4095b85fa14db1a479ff"
         }
     ],
     "highest_reach": [
@@ -113,16 +119,16 @@
             "bollinger": 450,
             "rsi_dyd": 1080,
             "rsi_storj": 1056,
-            "rsi_atom" : 1000,
-            "x3_gala" : 1148,
-            "x3_uni" : 1175,
-            "x3_luna" : 1175,
-            "moving_ens" : 824,
-            "moving_chz" : 863,
-            "moving_xrp" : 861,
-            "bollinger_knc" : 832,
-            "bollinger_ens" : 769,
-            "bollinger_op" : 1000
+            "rsi_atom": 1000,
+            "x3_gala": 1148,
+            "x3_uni": 1175,
+            "x3_luna": 1175,
+            "moving_ens": 824,
+            "moving_chz": 863,
+            "moving_xrp": 861,
+            "bollinger_knc": 832,
+            "bollinger_ens": 769,
+            "bollinger_op": 1000
         }
     ],
     "coeff_simu": [
@@ -133,16 +139,16 @@
             "bollinger": 9.6485,
             "rsi_dyd": 0.2389645476,
             "rsi_storj": 0.1991948484,
-            "rsi_atom" : 0.15780996,
-            "x3_gala" : 0.4094755506,
-            "x3_uni" : 0.5303531574,
-            "x3_luna" : 0.4593277907,
-            "moving_ens" : 0.552589328,
-            "moving_chz" : 0.4771895551,
-            "moving_xrp" : 0.3073251071,
-            "bollinger_knc" : 0.2465210528,
-            "bollinger_ens" : 0.365329640569,
-            "bollinger_op" : 0.3631485094
+            "rsi_atom": 0.15780996,
+            "x3_gala": 0.4094755506,
+            "x3_uni": 0.5303531574,
+            "x3_luna": 0.4593277907,
+            "moving_ens": 0.552589328,
+            "moving_chz": 0.4771895551,
+            "moving_xrp": 0.3073251071,
+            "bollinger_knc": 0.2465210528,
+            "bollinger_ens": 0.365329640569,
+            "bollinger_op": 0.3631485094
         }
     ]
 }

@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://idrfrance.ngrok.app"
+const ngrokURL = "https://ed93-146-70-194-101.ngrok-free.app"
 
 var varStratSelect;
 var selectStrat;
@@ -221,6 +221,7 @@ async function process_alert(alerte){
     // Selectionne le bon montant
     // Parcours les alertes
     for (const element of alerte["strategies"]) {
+
       console.log(timeCoeff);
       // Récupère uniquement la mention qui nous intéresse car Trading View envoie l'actif AAVEUSDT.P et MEXC prends AAVE_USDT
       const nomActif = element["actif"].split(".")[0];
@@ -228,8 +229,14 @@ async function process_alert(alerte){
       const type = element.type;
       const stopLoss = parseInt(element.stop_loss, 10);
       const takeProfit = parseInt(element.take_profit, 10);
+      const is_different_reinvest = element.is_different_reinvest
       let valueStopLoss = 0;
       let valueTakeProfit = 0;
+      
+      if (is_different_reinvest != null && is_different_reinvest == 1) {
+        isAutoReinvest = false;
+        selectQuantite = element.alert_message.split(" QTY :")[1]
+      }
 
       console.log(element.alert_message.split("SL :"))
       if(stopLoss == 1 && element.alert_message.split("SL :").length > 1){
@@ -238,7 +245,7 @@ async function process_alert(alerte){
 
       console.log(element.alert_message.split("TP :"))
       if(takeProfit == 1 && element.alert_message.split("TP :").length > 1){
-        valueTakeProfit = parseFloat(element.alert_message.split("TP :")[1], 10);
+        valueTakeProfit = parseFloat(element.alert_message.split("TP :")[1].split(" QTY :")[0], 10);
       }
       
       console.log(nomActif + " " + position + " " + type +" "  + element.strategy_order_name + " " + stopLoss + " " + valueStopLoss  + " " + takeProfit + " " + valueTakeProfit);

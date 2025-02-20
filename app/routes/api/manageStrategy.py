@@ -14,6 +14,10 @@ def add_strategy():
             {"value": strat, "label": strat} for strat in list_strategy
         ]
 
+        current_app.config["crypto_status"] = {
+            strat : {} for strat in current_app.config['list_strategy']
+        }
+
         current_app.config["apiKey"][0][request.args.get('strategy')] = request.args.get('apiKey')
 
         current_app.config["secretKey"][0][request.args.get('strategy')] = request.args.get('secretKey')
