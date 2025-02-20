@@ -258,27 +258,27 @@ async function process_alert(alerte){
         {
           timeCoeff = timeCoeff + 1;
           await searchCrypto(nomActif);
-          await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
+          await attendre(1000 + 2000*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
           await buy(selectQuantite, long = false, stopLoss, valueStopLoss, takeProfit, valueTakeProfit);
         }
         else
         {
           timeCoeff = timeCoeff + 1;
           await searchCrypto(nomActif);
-          await attendre(2000* timeAdjustableCoeff + 3000/70 * timeCoeff);
+          await attendre(2000 + 3000*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
           await buy(selectQuantite, long = true, stopLoss, valueStopLoss, takeProfit, valueTakeProfit);
         }
       }
       else {
         if (position == "short"){
-          await attendre(500* timeAdjustableCoeff + 1000/70 * timeCoeff);
+          await attendre(500 + 1000*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
           await closeTrade(nomActif, false);
-          await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
+          await attendre(1000 +1500*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
         }
         else {
-          await attendre(500* timeAdjustableCoeff + 1000/70 * timeCoeff);
+          await attendre(500 + 1000*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
           await closeTrade(nomActif, true);
-          await attendre(1000* timeAdjustableCoeff + 1500/70 * timeCoeff);
+          await attendre(1000 + 1500*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
         }
       }
       // Supprime l'alerte
@@ -424,7 +424,7 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit =
     }
   }
   // Appuie sur open long/shirt
-  await attendre(1000* timeAdjustableCoeff + 2500/70 * timeCoeff);
+  await attendre(1000 + 1500*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
   await attendre(500);
   if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
@@ -613,4 +613,7 @@ async function reinvest() {
 
   console.log("La quantité finale est ", selectQuantite);
 }
-  
+
+function excecutionTime(a,b,c,x){
+  return (a*(x-b)**4)*Math.log(x) + x /c
+}
