@@ -13,6 +13,12 @@ def check_doublon():
         temp_crypt = []
         for actif in current_crypto:
             actif_name = actif.split(".")[0]
+            if actif_name == "BNXNEWUSDT":
+                actif_name = 'BNXUSDT.' + actif.split(".")[1]
+            elif actif_name == "FILECOINUSDT":
+                actif_name = "FILUSDT." + actif.split(".")[1]
+            elif actif_name == "LUNANEWUSDT":
+                actif_name = "LUNAUSDT." + actif.split(".")[1]
             if temp_crypt != [] and actif_name in temp_crypt:
                 strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'take_profit' : '0', 'time': '2025-01-11T17:54:00Z'})
                 strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long"  ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
@@ -24,10 +30,10 @@ def check_doublon():
         for actif in doublon :
             actif_name = actif.split(".")[0]
             if actif_name == "BNXNEWUSDT":
-                actif = 'BNXUSDT.' + actif.split(".")[1]
+                actif_name = 'BNXUSDT.' + actif.split(".")[1]
             elif actif_name == "FILECOINUSDT":
-                actif = "FILUSDT." + actif.split(".")[1]
+                actif_name = "FILUSDT." + actif.split(".")[1]
             elif actif_name == "LUNANEWUSDT":
-                actif = "LUNAUSDT." + actif.split(".")[1]
+                actif_name = "LUNAUSDT." + actif.split(".")[1]
             strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit Doublon', 'actif': actif_name, 'stop_loss': '0', 'take_profit' : '0', 'time': '2025-01-11T17:54:00Z'})
         return jsonify({"strategies": strategies_to_send}), 200
