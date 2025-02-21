@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://ed93-146-70-194-101.ngrok-free.app"
+const ngrokURL = "https://idrfrance.ngrok.app"
 
 var varStratSelect;
 var selectStrat;
@@ -11,6 +11,7 @@ var timeCoeff;
 var timeAdjustableCoeff = 1;
 
 var isAutoReinvest = true;
+var isDifferentReinvest = false;
 
 var countOpenOrder;
 
@@ -24,32 +25,13 @@ async function infiniteTrade(strat_to_use = "alert") {
       await process_alert(strategies);
       /// CHECK IF DOUBLON
       await attendre(500);
-      const data = {
-        action : "checkDoublon",
-        strategy : selectStrat,
-        quantite : selectQuantite
-      }
-      try {
-        const response = await fetch(ngrokURL + "/check_doublon", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data)
-        });
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP : ${response.status}`);
-        }
-        const datas = await response.json();
-        console.log("Réponse :", datas);
-        strategies = datas
-      } 
-      catch (error) {
-        console.error("Erreur :", error);
-      }
-
       console.log("process data");
-      await process_alert(strategies);
+      if(!isDifferentReinvest) {
+        await attendre(500);
+        console.log("process data");
+        strategies = await checkDoublon();
+        await process_alert(strategies);
+      }
       strategies = []
     }
     else {
@@ -232,10 +214,14 @@ async function process_alert(alerte){
       const is_different_reinvest = element.is_different_reinvest
       let valueStopLoss = 0;
       let valueTakeProfit = 0;
-      
+
       if (is_different_reinvest != null && is_different_reinvest == 1) {
         isAutoReinvest = false;
         selectQuantite = element.alert_message.split(" QTY :")[1]
+        isDifferentReinvest = true;
+      }
+      else {
+        isDifferentReinvest = false;
       }
 
       console.log(element.alert_message.split("SL :"))
@@ -616,4 +602,31 @@ async function reinvest() {
 
 function excecutionTime(a,b,c,x){
   return (a*(x-b)**4)*Math.log(x) + x /c
+}
+async function checkDoublon(){
+  const data = {
+    action : "checkDoublon",
+    strategy : selectStrat,
+    quantite : selectQuantite
+  }
+  try {
+    const response = await fetch(ngrokURL + "/check_doublon", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    const datas = await response.json();
+    console.log("Réponse :", datas);
+    strategies = datas;
+  } 
+  catch (error) {
+    console.error("Erreur :", error);
+  }
+
+  return strategies;
 }
