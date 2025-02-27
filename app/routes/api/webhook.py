@@ -30,10 +30,13 @@ def webhook():
         elif actif == "FILECOINUSDT.P":
             actif = "FILUSDT.P"
         if position == "short":
+            name_to_enter = actif.split(".")[0] + ".2"
             if type == 'sell':
                 type = 'buy'
             elif type == 'buy':
                 type = 'sell'
+        else:
+            name_to_enter = actif.split(".")[0] + ".1"
         if position == "flat":
             if "short" in alert_message :
                 position = "short"
@@ -47,7 +50,8 @@ def webhook():
                 if nom in alert.values() and actif in alert.values() and alert_message in alert.values() and position in alert.values() and type in alert.values() and time in alert.values():
                     print("Delete double")
                     return jsonify({"status": "success", "message": "Reçu mais existe déjà"}), 200
-        current_app.config['crypto_status'][nom][actif.split(".")[0]] = 0 if type == 'sell' else 1 if type == 'buy' else None
+        
+        current_app.config['crypto_status'][nom][name_to_enter] = 0 if type == 'sell' else 1 if type == 'buy' else None
         current_app.config['current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'take_profit' : take_profit, 'time':time, 'is_different_reinvest' : is_different_reinvest})
         current_app.config['temp_current_alert'].append({'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'take_profit' : take_profit, 'time':time, 'is_different_reinvest' : is_different_reinvest})
         print("Final data",{'strategy_order_name': nom, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' :position, 'stop_loss': stop_loss, 'take_profit' : take_profit, 'time':time, 'is_different_reinvest' : is_different_reinvest} )
