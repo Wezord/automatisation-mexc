@@ -23,8 +23,8 @@ def check_doublon():
                 strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'take_profit' : '0', 'time': '2025-01-11T17:54:00Z'})
                 strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long"  ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'time': '2025-01-11T17:54:00Z'})
             temp_crypt.append(actif_name)
-            if actif_name in current_app.config['crypto_status'][data.get('strategy')]:
-                if current_app.config['crypto_status'][data.get('strategy')][actif_name] == 0:
+            if actif in current_app.config['crypto_status'][data.get('strategy')]:
+                if current_app.config['crypto_status'][data.get('strategy')][actif] == 0:
                     strategies_to_send.append({'strategy_order_name': data.get("strategy"), 'type': 'sell', 'position': "long" if actif.split(".")[1] == "1" else "short" ,'alert_message': 'Force Exit pas lieu detre', 'actif': actif_name, 'stop_loss': '0', 'take_profit' : '0', 'time': '2025-01-11T17:54:00Z'})
         print(doublon)
         for actif in doublon :
