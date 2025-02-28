@@ -2,7 +2,7 @@
 var dicStrats = {
 };
 
-const ngrokURL = "https://ed93-146-70-194-101.ngrok-free.app"
+const ngrokURL = "https://idrfrance.ngrok.app"
 
 var varStratSelect;
 var selectStrat;
