@@ -107,7 +107,7 @@
                 },
                 body: JSON.stringify({
                     action: "delete", // Données spécifiques de la ligne
-                    alerte: {'strategy_order_name': strategy_name, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' : position, 'stop_loss': "1", 'time':time}
+                    alerte: {'strategy_order_name': strategy_name, 'actif' : actif, 'alert_message': alert_message, 'type': type, 'position' : position, 'stop_loss': "1", 'time':time, 'is_different_reinvest' : '1'}
                 })
             })
             .then(response => {
