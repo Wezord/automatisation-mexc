@@ -415,6 +415,7 @@ async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit =
   await attendre(500);
   if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
   console.log("ordre réalisé");
+  click_button(".ant-modal-footer .ant-btn-primary",0);
 }
 
 function doitOuvrirRecherche() {
