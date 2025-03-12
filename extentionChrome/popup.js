@@ -24,10 +24,10 @@ async function infiniteTrade(strat_to_use = "alert") {
       console.log("process data");
       await process_alert(strategies);
       /// CHECK IF DOUBLON
-      await attendre(500);
+      await attendre(1000);
       console.log("process data");
       if(!isDifferentReinvest) {
-        await attendre(500);
+        await attendre(1000);
         console.log("process data");
         strategies = await checkDoublon();
         await process_alert(strategies);
@@ -55,7 +55,7 @@ async function infiniteTrade(strat_to_use = "alert") {
       catch (error) {
         console.error("Erreur :", error);
       }
-    await attendre(20000);
+    await attendre(1000);
     }
   }
 }
@@ -200,6 +200,7 @@ populateSelectOptions();
 // Fonction principale
 async function process_alert(alerte){
   if(alerte["strategies"].length > 0){
+    await attendre(1000);
     // Selectionne le bon montant
     // Parcours les alertes
     for (const element of alerte["strategies"]) {
@@ -244,31 +245,31 @@ async function process_alert(alerte){
         {
           timeCoeff = timeCoeff + 1;
           await searchCrypto(nomActif);
-          await attendre(1000 + 2000*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
+          await attendre(1000);
           await buy(selectQuantite, long = false, stopLoss, valueStopLoss, takeProfit, valueTakeProfit);
         }
         else
         {
           timeCoeff = timeCoeff + 1;
           await searchCrypto(nomActif);
-          await attendre(2000 + 3000*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
+          await attendre(1000);
           await buy(selectQuantite, long = true, stopLoss, valueStopLoss, takeProfit, valueTakeProfit);
         }
+        await attendre(1000);
       }
       else {
         if (position == "short"){
-          await attendre(500 + 1000*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
+          await attendre(1000);
           await closeTrade(nomActif, false);
-          await attendre(1000 +1500*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
         }
         else {
-          await attendre(500 + 1000*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
+          await attendre(1000);
           await closeTrade(nomActif, true);
-          await attendre(1000 + 1500*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
         }
+        await attendre(1000);
       }
       // Supprime l'alerte
-      await attendre(500);
+      await attendre(1000);
     }
     if (isAutoReinvest) {await reinvest();}
   }
@@ -380,39 +381,40 @@ function fillButton(class_component, numero_component, value) {
 }
 
 async function buy(valeur, long=true, stopLoss=0, valueStopLoss =0, takeProfit = 0, valueTakeProfit = 0 ){
+  await attendre(1000);
   //Clique sur ouvrir
   click_button("#mexc_contract_v_open_position .ant-input", 0);
-  await attendre(500);
+  await attendre(1000);
   fillButton("#mexc_contract_v_open_position .ant-input", 0, valeur);
   if(stopLoss > 0 || takeProfit>0){
     console.log("SL/TP")
     // Coche la case long Sl
-    await attendre(500);
+    await attendre(1000);
     long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);
-    await attendre(500);
+    await attendre(1000);
     if (stopLoss>0){
       // Clique sur la case du stoploss
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1);
-      await attendre(500);
+      await attendre(1000);
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 1, valueStopLoss);
-      await attendre(500);
+      await attendre(1000);
       console.log("sl");
     }
     if(takeProfit>0){
       // Clique sur la case du takeprofit
       click_button(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0);
-      await attendre(500);
+      await attendre(1000);
       // Remplie la case
       fillButton(".InputNumberExtendV2_inputWrapper__TgHac .ant-input", 0, valueTakeProfit);
-      await attendre(500);
+      await attendre(1000);
       console.log("tp");
     }
   }
   // Appuie sur open long/shirt
-  await attendre(1000 + 1500*excecutionTime(1.38, 0.37, 20, timeCoeff / 40));
+  await attendre(1000);
   long ? click_button(".component_longBtn__BBkFR", 0):click_button(".component_shortBtn__s8HK4", 0);
-  await attendre(500);
+  await attendre(1000);
   if (stopLoss > 0){long ?click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 0):click_button(".component_checkBoxView__DsRmy .ant-checkbox-wrapper .component_checkText__mHuZJ", 1);}
   console.log("ordre réalisé");
   click_button(".ant-modal-footer .ant-btn-primary",0);
@@ -455,14 +457,14 @@ async function searchCrypto(actif){
   // ResizableWrapper_resizableWrapper__Z_aE5
   var doitOuvrir=true;
   click_button(".contractDetail_contractNameBox__IcVlT", 0);
-  await attendre(500* timeAdjustableCoeff + 500/7 * timeCoeff);
+  await attendre(1000);
   click_button(".Pairs_searchSelect__i_dbG .ant-input", 0);
-  await attendre(500);
+  await attendre(1000);
   fillButton(".Pairs_searchSelect__i_dbG .ant-input", 0, actif);
-  await attendre(500);
+  await attendre(1000);
   // A changer en fonction de la langue
   click_button("[title='"+ actif + " Perpétuel'" + "]", 0);
-  await attendre(1000* timeAdjustableCoeff + 500/7 * timeCoeff);
+  await attendre(1000);
   await doitOuvrirRecherche().then((doitOuvrir) => {
     if (doitOuvrir) {
       {}

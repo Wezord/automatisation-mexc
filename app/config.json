@@ -67,10 +67,6 @@
         {
             "value": "accel",
             "label": "accel"
-        },
-        {
-            "value": "strat",
-            "label": "strat"
         }
     ],
     "apiKey": [
@@ -91,8 +87,7 @@
             "bollinger_ens": "mx0vglzDDchtqYfcSv",
             "rsi_atom": "mx0vglVKDZ0tAA71zi",
             "rsi_dyd": "mx0vglt3oXF4bqZzVf",
-            "accel": "mx0vglt3oXF4bqZzVf",
-            "strat": "sfg"
+            "accel": "mx0vglt3oXF4bqZzVf"
         }
     ],
     "secretKey": [
@@ -113,8 +108,7 @@
             "bollinger_ens": "0989528d21e94419b10bd512d2df3d8a",
             "rsi_atom": "2a0e56386f9a47fd99ffa993b2a9edbf",
             "rsi_dyd": "4032b9bce9ca4095b85fa14db1a479ff",
-            "accel": "4032b9bce9ca4095b85fa14db1a479ff",
-            "strat": "gsrg"
+            "accel": "4032b9bce9ca4095b85fa14db1a479ff"
         }
     ],
     "highest_reach": [
@@ -133,7 +127,7 @@
             "moving_chz": 863,
             "moving_xrp": 861,
             "bollinger_knc": 832,
-            "bollinger_ens": 769,
+            "bollinger_ens": 967.6137,
             "bollinger_op": 1000
         }
     ],
