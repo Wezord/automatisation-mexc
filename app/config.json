@@ -47,38 +47,10 @@
         {
             "value": "moving_chz",
             "label": "moving_chz"
-        },
-        {
-            "value": "bollinger",
-            "label": "bollinger"
-        },
-        {
-            "value": "moving",
-            "label": "moving"
-        },
-        {
-            "value": "x3",
-            "label": "x3"
-        },
-        {
-            "value": "rsi",
-            "label": "rsi"
-        },
-        {
-            "value": "accel",
-            "label": "accel"
-        },
-        {
-            "value": "test",
-            "label": "test"
         }
     ],
     "apiKey": [
         {
-            "rsi": "mx0vgl8p7abeiGYjJv",
-            "x3": "mx0vglbsiyENvYy5FA",
-            "moving": "mx0vglTJinDmmpVhD5",
-            "bollinger": "mx0vglfAsfIbEEwTgv",
             "moving_chz": "mx0vglpKA29hK3V3fF",
             "moving_xrp": "mx0vglpL3yNZmZP9Yb",
             "moving_ens": "mx0vglwMFY4kgDTuyj",
@@ -90,17 +62,11 @@
             "bollinger_knc": "mx0vgll3KI0DzvNQSZ",
             "bollinger_ens": "mx0vglzDDchtqYfcSv",
             "rsi_atom": "mx0vglVKDZ0tAA71zi",
-            "rsi_dyd": "mx0vglt3oXF4bqZzVf",
-            "accel": "mx0vglt3oXF4bqZzVf",
-            "test": "mx0vgloll7qcM9VAfJ"
+            "rsi_dyd": "mx0vglt3oXF4bqZzVf"
         }
     ],
     "secretKey": [
         {
-            "rsi": "e71e698295754d5fbd760f9be1b5da67",
-            "x3": "5be4ae5309d54d61a58354cd653d8dc4",
-            "moving": "da040ad343294cb98d49dfba5306f179",
-            "bollinger": "47b91101f48a443f906b1da50d5abab3",
             "moving_chz": "66b33720918d4ebaa6fe4933dc46f99e",
             "moving_xrp": "ccb1aed5c03c433a9ddff58de8dd29fe",
             "moving_ens": "918befe9dc584aacb3f6e01742357c19",
@@ -112,17 +78,11 @@
             "bollinger_knc": "adbe8010219c41a0a9cbd28077b56813",
             "bollinger_ens": "0989528d21e94419b10bd512d2df3d8a",
             "rsi_atom": "2a0e56386f9a47fd99ffa993b2a9edbf",
-            "rsi_dyd": "4032b9bce9ca4095b85fa14db1a479ff",
-            "accel": "4032b9bce9ca4095b85fa14db1a479ff",
-            "test": "86a09fc4e4924f47ae2c5500ebc3fdb0"
+            "rsi_dyd": "4032b9bce9ca4095b85fa14db1a479ff"
         }
     ],
     "highest_reach": [
         {
-            "rsi": 7873,
-            "x3": 38477,
-            "moving": 3271,
-            "bollinger": 450,
             "rsi_dyd": 1080,
             "rsi_storj": 1056,
             "rsi_atom": 1000,
@@ -139,10 +99,6 @@
     ],
     "coeff_simu": [
         {
-            "rsi": 5.93,
-            "x3": 14.4795,
-            "moving": 18.4535,
-            "bollinger": 9.6485,
             "rsi_dyd": 0.2389645476,
             "rsi_storj": 0.1991948484,
             "rsi_atom": 0.15780996,
